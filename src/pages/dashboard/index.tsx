@@ -1,19 +1,36 @@
-// import { Button } from "@/components/ui/button";
-// import {
-//   Card,
-//   CardContent,
-//   CardDescription,
-//   CardHeader,
-//   CardTitle,
-// } from "@/components/ui/card";
+import { useState, useEffect } from "react";
+
 import { Search } from "@/components/search";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ThemeSwitch from "@/components/theme-switch";
 import { TopNav } from "@/components/top-nav";
 import { UserNav } from "@/components/user-nav";
 import { Layout, LayoutBody, LayoutHeader } from "@/components/custom/layout";
+import { CardManga } from "@/components/manga-card";
+import { apiClient } from "@/services/apiClient";
 
 export default function Dashboard() {
+  const [loading, setLoading] = useState<boolean>(false);
+  const [latestAnimes, setLatestAnimes] = useState([]);
+
+  const getLatestAnimes = async () => {
+    setLoading(true);
+
+    try {
+      const { data } = await apiClient().get("/api/ananquim/latest");
+
+      setLatestAnimes(data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getLatestAnimes();
+  }, []);
+
   return (
     <Layout>
       <LayoutHeader>
@@ -26,25 +43,29 @@ export default function Dashboard() {
       </LayoutHeader>
 
       <LayoutBody className="space-y-4">
-        <div className="flex items-center justify-between space-y-2">
+        <div className="flex items-center gap-3 space-y-2">
           <h1 className="text-2xl font-bold tracking-tight md:text-3xl">
-            Dashboard
+            Ryu Mangás
           </h1>
+          <p>Since 2024 - Sem popups! Totalmente Gratuito!</p>
         </div>
-        <Tabs
-          orientation="vertical"
-          defaultValue="overview"
-          className="space-y-4"
-        >
-          <div className="w-full overflow-x-scroll pb-2">
+        <Tabs orientation="vertical" defaultValue="home" className="space-y-4">
+          <div className="w-full pb-2">
             <TabsList>
-              <TabsTrigger value="overview">Overview</TabsTrigger>
-              <TabsTrigger value="analytics">Analytics</TabsTrigger>
-              <TabsTrigger value="reports">Reports</TabsTrigger>
-              <TabsTrigger value="notifications">Notifications</TabsTrigger>
+              <TabsTrigger value="home">Geral</TabsTrigger>
+              <TabsTrigger value="latest">Últimos ançamentos</TabsTrigger>
+              <TabsTrigger value="trendings">+ Assistidos</TabsTrigger>
             </TabsList>
           </div>
-          <TabsContent value="overview" className="space-y-4"></TabsContent>
+          <TabsContent value="home" className="space-y-4">
+            {loading ? (
+              <span>Carregando... </span>
+            ) : latestAnimes && latestAnimes.length > 0 ? (
+              <CardManga manga={latestAnimes} />
+            ) : (
+              <span>Nenhum anime encontrado</span>
+            )}
+          </TabsContent>
         </Tabs>
       </LayoutBody>
     </Layout>
@@ -53,23 +74,13 @@ export default function Dashboard() {
 
 const topNav = [
   {
-    title: "Overview",
-    href: "dashboard/overview",
+    title: "Home",
+    href: "dashboard/home",
     isActive: true,
   },
   {
-    title: "Customers",
-    href: "dashboard/customers",
-    isActive: false,
-  },
-  {
-    title: "Products",
-    href: "dashboard/products",
-    isActive: false,
-  },
-  {
-    title: "Settings",
-    href: "dashboard/settings",
+    title: "Register",
+    href: "auth/register",
     isActive: false,
   },
 ];
