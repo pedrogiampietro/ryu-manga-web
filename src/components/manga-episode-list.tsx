@@ -36,9 +36,12 @@ const MangaEpisodesList: React.FC<EpisodesListProps> = ({ episodes }) => {
             className="text-white bg-primary-foreground p-2 rounded"
           >
             <Link
-              to={`/ler-manga/${serealizedNameAnime}/${
-                episode.link.split("/")[episode.link.split("/").length - 2]
-              }`}
+              to={{
+                pathname: `/ler-manga/${serealizedNameAnime}/${
+                  episode.link.split("/")[episode.link.split("/").length - 2]
+                }`,
+              }}
+              state={episodes}
             >
               <h3 className="font-bold">Episódio: {episode.title}</h3>
             </Link>

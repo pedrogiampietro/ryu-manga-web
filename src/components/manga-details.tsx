@@ -1,9 +1,10 @@
 import React from "react";
 import { Ratings } from "./custom/starRating";
+import { Separator } from "@/components/ui/separator";
 
 interface MangaDetailsProps {
   title: string;
-  avatar: string;
+  image: string;
   rating: number;
   reviews: number;
   alternative: string;
@@ -12,13 +13,13 @@ interface MangaDetailsProps {
   genres: string[];
   type: string;
   tags: string[];
-  release: string;
+  releaseYear: string;
   status: string;
 }
 
 const MangaDetails: React.FC<MangaDetailsProps> = ({
   title,
-  avatar,
+  image,
   rating,
   reviews,
   alternative,
@@ -27,7 +28,7 @@ const MangaDetails: React.FC<MangaDetailsProps> = ({
   genres,
   type,
   tags,
-  release,
+  releaseYear,
   status,
 }) => {
   return (
@@ -38,7 +39,7 @@ const MangaDetails: React.FC<MangaDetailsProps> = ({
 
       <div className="relative z-10 flex items-center space-x-6">
         <img
-          src={avatar}
+          src={image}
           alt={`${title} avatar`}
           className="w-24 h-24 rounded-full border-2 border-primary"
         />
@@ -53,11 +54,11 @@ const MangaDetails: React.FC<MangaDetailsProps> = ({
       <div className="relative z-10 mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="col-span-1 sm:col-span-2 flex flex-col sm:flex-row sm:justify-between space-y-2 sm:space-y-0 sm:space-x-4">
           <div>
-            <Ratings rating={rating} />
             <p className="text-lg text-white dark:text-gray-600">
               <strong className="text-primary">Classificação:</strong> {rating}{" "}
               / 5 out of {reviews}
             </p>
+            <Ratings rating={rating} />
           </div>
 
           <p className="text-lg text-white dark:text-gray-600">
@@ -67,6 +68,7 @@ const MangaDetails: React.FC<MangaDetailsProps> = ({
             <strong className="text-primary">Artista:</strong> {artist}
           </p>
         </div>
+
         <div className="flex flex-col">
           <p className="w-max text-lg text-white dark:text-gray-600">
             <strong className="text-primary">Gêneros:</strong>{" "}
@@ -75,13 +77,12 @@ const MangaDetails: React.FC<MangaDetailsProps> = ({
           <p className="text-lg text-white dark:text-gray-600">
             <strong className="text-primary">Tipo:</strong> {type}
           </p>
-        </div>
-        <div className="col-span-1 sm:col-span-2">
+
           <p className="text-lg text-white dark:text-gray-600">
             <strong className="text-primary">Tags:</strong> {tags.join(", ")}
           </p>
           <p className="text-lg text-white dark:text-gray-600">
-            <strong className="text-primary">Publicado:</strong> {release}
+            <strong className="text-primary">Publicado:</strong> {releaseYear}
           </p>
           <p className="text-lg text-white dark:text-gray-600">
             <strong className="text-primary">Status:</strong> {status}

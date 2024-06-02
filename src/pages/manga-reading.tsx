@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { apiClient } from "@/services/apiClient";
 import { LottieLoad } from "@/components/custom/loading";
 import {
@@ -10,36 +10,45 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+import { HomeIcon } from "lucide-react";
 
 const MangaReader = () => {
   const [loading, setLoading] = useState(false);
   const [readingData, setReadingData] = useState<any>({});
   const [currentPage, setCurrentPage] = useState(0);
   const [viewMode, setViewMode] = useState("page");
-  const { pathname } = useLocation();
-
-  const getMangaDetails = async () => {
-    setLoading(true);
-
-    const parts = pathname.split("/");
-    const name = parts[2];
-    const episodio = parts[3];
-
-    try {
-      const { data } = await apiClient().get(
-        `/api/ananquim/manga/${name}/${episodio}/read`
-      );
-      setReadingData(data);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
+  const { pathname, state } = useLocation();
+  const parts = pathname.split("/");
+  const initialChapter = {
+    name: parts[2],
+    episodio: parts[3],
   };
+  const [chapter, setChapter] = useState(initialChapter);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    getMangaDetails();
-  }, [pathname]);
+    const getMangaDetails = async () => {
+      setLoading(true);
+      const { name, episodio } = chapter;
+
+      try {
+        const { data } = await apiClient().get(
+          `/api/ananquim/manga/${name}/${episodio}/read`
+        );
+        setReadingData(data);
+        setCurrentPage(0);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (chapter.name && chapter.episodio) {
+      getMangaDetails();
+    }
+  }, [chapter]);
 
   const nextPage = () => {
     setCurrentPage((prevPage) => prevPage + 1);
@@ -49,74 +58,121 @@ const MangaReader = () => {
     setCurrentPage((prevPage) => prevPage - 1);
   };
 
+  const EpisodesPanel = () => (
+    <div className="fixed top-0 left-0 h-full w-48 bg-gray-900 text-white overflow-y-auto shadow-lg">
+      <h2 className="text-xl font-bold p-4 border-b border-gray-700">
+        Episódios
+      </h2>
+      <ul>
+        {state.map((episode: any) => {
+          const parts = episode.link.split("/");
+          const name = parts[4];
+          const episodio = parts[5];
+          const isActive = chapter.episodio === episodio;
+
+          return (
+            <li key={episode.id} className="p-2">
+              <Badge
+                onClick={() =>
+                  setChapter({
+                    name: name,
+                    episodio: episodio,
+                  })
+                }
+                className={`cursor-pointer ${
+                  isActive
+                    ? "bg-green-500 text-white"
+                    : "bg-gray-800 text-gray-300"
+                }`}
+              >
+                {episodio}
+              </Badge>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-zinc-900">
-      <header className="fixed top-0 left-0 right-0 bg-gray-800 p-4 z-50 shadow-md">
-        <div className="container mx-auto flex justify-between items-center">
-          <h1 className="text-4xl font-bold text-white">Leitor de Mangá</h1>
-          <div className="flex items-center gap-4">
-            <Select onValueChange={(value) => setViewMode(value)}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Como deseja assistir?" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectItem value="list">Lista Única</SelectItem>
-                  <SelectItem value="page">Paginada</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-            {viewMode === "page" && (
-              <div className="flex gap-4">
-                <button
-                  onClick={prevPage}
-                  disabled={currentPage === 0}
-                  className="bg-blue-500 text-white px-4 py-2 rounded disabled:bg-blue-300"
-                >
-                  Página Anterior
-                </button>
-                <button
-                  onClick={nextPage}
-                  disabled={
-                    currentPage === (readingData?.images?.length || 0) - 1
-                  }
-                  className="bg-blue-500 text-white px-4 py-2 rounded disabled:bg-blue-300"
-                >
-                  Próxima Página
-                </button>
-              </div>
-            )}
+    <div className="flex min-h-screen bg-zinc-900">
+      <EpisodesPanel />
+      <div className="flex flex-col items-center justify-center flex-grow ml-48">
+        <header className="fixed top-0 left-48 right-0 bg-gray-900 p-4 z-50 shadow-md border-b border-gray-700">
+          <div className="container mx-auto flex justify-between items-center">
+            <button
+              onClick={() => navigate("/")}
+              className="bg-primary hover:bg-primary-foreground text-white px-4 py-2 rounded absolute left-4"
+            >
+              <HomeIcon className="w-5 h-5" />
+            </button>
+            <h1 className="text-4xl font-bold text-white mx-auto">
+              Ryu Mangá - Lendo atualmente: {chapter.name}
+            </h1>
+            <div className="flex items-center gap-4">
+              <Select onValueChange={(value) => setViewMode(value)}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Como deseja assistir?" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem value="list">Lista Única</SelectItem>
+                    <SelectItem value="page">Paginada</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              {viewMode === "page" && (
+                <div className="flex gap-4">
+                  <button
+                    onClick={prevPage}
+                    disabled={currentPage === 0}
+                    className="bg-primary hover:bg-primary-foreground text-white px-4 py-2 rounded disabled:bg-green-300"
+                  >
+                    Página Anterior
+                  </button>
+                  <button
+                    onClick={nextPage}
+                    disabled={
+                      currentPage === (readingData?.images?.length || 0) - 1
+                    }
+                    className="bg-primary hover:bg-primary-foreground text-white px-4 py-2 rounded disabled:bg-green-300"
+                  >
+                    Próxima Página
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-      </header>
-      <main className="flex flex-col items-center justify-center mt-24">
-        {loading ? (
-          <LottieLoad />
-        ) : (
-          <>
-            {readingData?.images && viewMode === "page" && (
-              <div className="w-660 h-1200 mx-auto">
-                <img
-                  src={readingData?.images[currentPage]}
-                  alt={`Manga page ${currentPage + 1}`}
-                  className="object-cover w-full h-full rounded-lg shadow-md"
-                />
-              </div>
-            )}
-            {readingData?.images &&
-              viewMode === "list" &&
-              readingData.images.map((image, index) => (
-                <div key={index} className="w-660 h-1200 mx-auto">
+        </header>
+        <main className="flex flex-col items-center justify-center mt-24 space-y-4">
+          {loading ? (
+            <LottieLoad />
+          ) : (
+            <>
+              {readingData?.images && viewMode === "page" && (
+                <div className="w-660 h-1200 mx-auto">
                   <img
-                    src={image}
-                    alt={`Manga page ${index + 1}`}
-                    className="object-cover w-full h-full rounded-lg shadow-md"
+                    src={readingData?.images[currentPage]}
+                    alt={`Manga page ${currentPage + 1}`}
+                    className="object-cover w-full h-full rounded-lg shadow-lg"
                   />
                 </div>
-              ))}
-          </>
-        )}
-      </main>
+              )}
+              {readingData?.images &&
+                viewMode === "list" &&
+                readingData.images.map((image: string, index: number) => (
+                  <div key={index} className="w-660 h-1200 mx-auto">
+                    <img
+                      src={image}
+                      alt={`Manga page ${index + 1}`}
+                      className="object-cover w-full h-full rounded-lg shadow-lg"
+                    />
+                  </div>
+                ))}
+            </>
+          )}
+        </main>
+      </div>
     </div>
   );
 };
