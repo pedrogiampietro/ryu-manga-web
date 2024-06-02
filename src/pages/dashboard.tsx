@@ -12,9 +12,26 @@ import { useToast } from "@/components/ui/use-toast";
 
 const Dashboard: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
+  const [geralAnimes, setGeralAnimes] = useState([]);
   const [latestAnimes, setLatestAnimes] = useState([]);
   const [trendingAnimes, setTrendingAnimes] = useState([]);
   const { toast } = useToast();
+
+  const getGeralAnimes = async () => {
+    try {
+      const { data } = await apiClient().get("/api/ananquim");
+      setGeralAnimes(data);
+    } catch (error: any) {
+      toast({
+        title: "Oooops!",
+        description: error.message,
+      });
+
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const getLatestAnimes = async () => {
     try {
@@ -52,6 +69,7 @@ const Dashboard: React.FC = () => {
     setLoading(true);
     getLatestAnimes();
     getTrendingAnimes();
+    getGeralAnimes();
   }, []);
 
   return (
@@ -80,6 +98,17 @@ const Dashboard: React.FC = () => {
               <TabsTrigger value="trendings">+ Assistidos</TabsTrigger>
             </TabsList>
           </div>
+
+          <TabsContent value="home" className="space-y-4">
+            {loading ? (
+              <span>Carregando... </span>
+            ) : geralAnimes && geralAnimes.length > 0 ? (
+              <CardManga manga={geralAnimes} />
+            ) : (
+              <span>Nenhum anime encontrado</span>
+            )}
+          </TabsContent>
+
           <TabsContent value="latest" className="space-y-4">
             {loading ? (
               <span>Carregando... </span>
@@ -93,7 +122,7 @@ const Dashboard: React.FC = () => {
           <TabsContent value="trendings" className="space-y-4">
             {loading ? (
               <span>Carregando... </span>
-            ) : latestAnimes && latestAnimes.length > 0 ? (
+            ) : trendingAnimes && trendingAnimes.length > 0 ? (
               <CardManga manga={trendingAnimes} />
             ) : (
               <span>Nenhum anime encontrado</span>
