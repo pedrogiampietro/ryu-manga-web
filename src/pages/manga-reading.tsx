@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "@/services/apiClient";
 import { LottieLoad } from "@/components/custom/loading";
 import {
@@ -14,8 +15,6 @@ import { Badge } from "@/components/ui/badge";
 import { HomeIcon } from "lucide-react";
 
 const MangaReader = () => {
-  const [loading, setLoading] = useState(false);
-  const [readingData, setReadingData] = useState<any>({});
   const [currentPage, setCurrentPage] = useState(0);
   const [viewMode, setViewMode] = useState("page");
   const { pathname, state } = useLocation();
@@ -27,28 +26,21 @@ const MangaReader = () => {
   const [chapter, setChapter] = useState(initialChapter);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const getMangaDetails = async () => {
-      setLoading(true);
-      const { name, episodio } = chapter;
+  const fetchMangaDetails = async ({ queryKey }) => {
+    const [_, name, episodio] = queryKey;
+    const { data } = await apiClient().get(
+      `/api/ananquim/manga/${name}/${episodio}/read`
+    );
 
-      try {
-        const { data } = await apiClient().get(
-          `/api/ananquim/manga/${name}/${episodio}/read`
-        );
-        setReadingData(data);
-        setCurrentPage(0);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
+    setCurrentPage(0);
+    return data;
+  };
 
-    if (chapter.name && chapter.episodio) {
-      getMangaDetails();
-    }
-  }, [chapter]);
+  const { data: readingData, isLoading: loading } = useQuery({
+    queryKey: ["mangaDetails", chapter.name, chapter.episodio],
+    queryFn: fetchMangaDetails,
+    enabled: !!chapter.name && !!chapter.episodio, // Only run the query if chapter details are available
+  });
 
   const nextPage = () => {
     setCurrentPage((prevPage) => prevPage + 1);
