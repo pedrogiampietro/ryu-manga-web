@@ -1,9 +1,9 @@
-import Dashboard from "./pages/dashboard";
+import { Outlet } from "react-router-dom";
 
 function App() {
   return (
     <>
-      <Dashboard />
+      <Outlet />
     </>
   );
 }

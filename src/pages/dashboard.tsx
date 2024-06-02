@@ -8,19 +8,40 @@ import { UserNav } from "@/components/user-nav";
 import { Layout, LayoutBody, LayoutHeader } from "@/components/custom/layout";
 import { CardManga } from "@/components/manga-card";
 import { apiClient } from "@/services/apiClient";
+import { useToast } from "@/components/ui/use-toast";
 
-export default function Dashboard() {
+const Dashboard: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [latestAnimes, setLatestAnimes] = useState([]);
+  const [trendingAnimes, setTrendingAnimes] = useState([]);
+  const { toast } = useToast();
 
   const getLatestAnimes = async () => {
-    setLoading(true);
-
     try {
       const { data } = await apiClient().get("/api/ananquim/latest");
-
       setLatestAnimes(data);
-    } catch (error) {
+    } catch (error: any) {
+      toast({
+        title: "Oooops!",
+        description: error.message,
+      });
+
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getTrendingAnimes = async () => {
+    try {
+      const { data } = await apiClient().get("/api/ananquim/trending");
+      setTrendingAnimes(data);
+    } catch (error: any) {
+      toast({
+        title: "Oooops!",
+        description: error.message,
+      });
+
       console.error(error);
     } finally {
       setLoading(false);
@@ -28,7 +49,9 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
+    setLoading(true);
     getLatestAnimes();
+    getTrendingAnimes();
   }, []);
 
   return (
@@ -57,7 +80,7 @@ export default function Dashboard() {
               <TabsTrigger value="trendings">+ Assistidos</TabsTrigger>
             </TabsList>
           </div>
-          <TabsContent value="home" className="space-y-4">
+          <TabsContent value="latest" className="space-y-4">
             {loading ? (
               <span>Carregando... </span>
             ) : latestAnimes && latestAnimes.length > 0 ? (
@@ -66,11 +89,21 @@ export default function Dashboard() {
               <span>Nenhum anime encontrado</span>
             )}
           </TabsContent>
+
+          <TabsContent value="trendings" className="space-y-4">
+            {loading ? (
+              <span>Carregando... </span>
+            ) : latestAnimes && latestAnimes.length > 0 ? (
+              <CardManga manga={trendingAnimes} />
+            ) : (
+              <span>Nenhum anime encontrado</span>
+            )}
+          </TabsContent>
         </Tabs>
       </LayoutBody>
     </Layout>
   );
-}
+};
 
 const topNav = [
   {
@@ -84,3 +117,5 @@ const topNav = [
     isActive: false,
   },
 ];
+
+export default Dashboard;
