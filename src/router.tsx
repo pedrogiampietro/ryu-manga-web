@@ -25,6 +25,12 @@ const router = createBrowserRouter([
           Component: (await import("./pages/manga")).default,
         }),
       },
+      {
+        path: "ler-manga/:name/:chapter",
+        lazy: async () => ({
+          Component: (await import("./pages/manga-reading")).default,
+        }),
+      },
     ],
   },
 

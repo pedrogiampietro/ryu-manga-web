@@ -18,8 +18,6 @@ const Manga: React.FC = () => {
 
     try {
       const { data } = await apiClient().get(`/api/ananquim/manga/${name}`);
-
-      console.log("-- data", data);
       setMangaDetails(data);
     } catch (error) {
     } finally {

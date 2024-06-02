@@ -1,9 +1,10 @@
 import { Badge } from "@/components/ui/badge";
 import React from "react";
+import { Link, useLocation } from "react-router-dom";
 
 interface Episode {
   title: string;
-  number: number;
+  link: string;
   releaseDate: string;
 }
 
@@ -12,6 +13,9 @@ interface EpisodesListProps {
 }
 
 const MangaEpisodesList: React.FC<EpisodesListProps> = ({ episodes }) => {
+  const { pathname } = useLocation();
+  const serealizedNameAnime = pathname.split("/")[2];
+
   return (
     <div className="p-4 max-w-3xl mx-auto bg-zinc-900 shadow-md rounded-lg mt-4">
       <h2 className="text-2xl font-bold text-white">
@@ -28,12 +32,16 @@ const MangaEpisodesList: React.FC<EpisodesListProps> = ({ episodes }) => {
       <ul className="mt-2 space-y-2">
         {episodes.map((episode) => (
           <li
-            key={episode.number}
+            key={episode.link}
             className="text-white bg-primary-foreground p-2 rounded"
           >
-            <h3 className="font-bold">
-              Episódio {episode.number}: {episode.title}
-            </h3>
+            <Link
+              to={`/ler-manga/${serealizedNameAnime}/${
+                episode.link.split("/")[episode.link.split("/").length - 2]
+              }`}
+            >
+              <h3 className="font-bold">Episódio: {episode.title}</h3>
+            </Link>
             <p>Data de lançamento: {episode.releaseDate}</p>{" "}
           </li>
         ))}

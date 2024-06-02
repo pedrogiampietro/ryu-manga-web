@@ -1,129 +1,124 @@
-import * as React from "react";
-import { BookOpen, Bookmark, Search } from "lucide-react";
-
-import { cn } from "@/lib/utils";
-import { Input } from "@/components/ui/input";
+import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
+import { apiClient } from "@/services/apiClient";
+import { LottieLoad } from "@/components/custom/loading";
 import {
-  ResizableHandle,
-  ResizablePanel,
-  ResizablePanelGroup,
-} from "@/components/ui/resizable";
-import { Separator } from "@/components/ui/separator";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { TooltipProvider } from "@/components/ui/tooltip";
-// import { MangaDisplay } from "@/app/(app)/examples/manga/components/manga-display"
-// import { MangaList } from "@/app/(app)/examples/manga/components/manga-list"
-// import { Nav } from "@/app/(app)/examples/manga/components/nav"
-// import { type Manga } from "@/app/(app)/examples/manga/data"
-// import { useManga } from "@/app/(app)/examples/manga/use-manga"
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
-interface MangaProps {
-  //   mangas: Manga[]
-  defaultLayout: number[] | undefined;
-  defaultCollapsed?: boolean;
-  navCollapsedSize: number;
-}
+const MangaReader = () => {
+  const [loading, setLoading] = useState(false);
+  const [readingData, setReadingData] = useState<any>({});
+  const [currentPage, setCurrentPage] = useState(0);
+  const [viewMode, setViewMode] = useState("page");
+  const { pathname } = useLocation();
 
-export function Manga({
-  //   mangas,
-  defaultLayout = [265, 440, 655],
-  defaultCollapsed = false,
-  navCollapsedSize,
-}: MangaProps) {
-  const [isCollapsed, setIsCollapsed] = React.useState(defaultCollapsed);
-  //   const [manga] = useManga()
+  const getMangaDetails = async () => {
+    setLoading(true);
+
+    const parts = pathname.split("/");
+    const name = parts[2];
+    const episodio = parts[3];
+
+    try {
+      const { data } = await apiClient().get(
+        `/api/ananquim/manga/${name}/${episodio}/read`
+      );
+      setReadingData(data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getMangaDetails();
+  }, [pathname]);
+
+  const nextPage = () => {
+    setCurrentPage((prevPage) => prevPage + 1);
+  };
+
+  const prevPage = () => {
+    setCurrentPage((prevPage) => prevPage - 1);
+  };
 
   return (
-    <TooltipProvider delayDuration={0}>
-      <ResizablePanelGroup
-        direction="horizontal"
-        onLayout={(sizes: number[]) => {
-          document.cookie = `react-resizable-panels:layout=${JSON.stringify(
-            sizes
-          )}`;
-        }}
-        className="h-full max-h-[800px] items-stretch"
-      >
-        <ResizablePanel
-          defaultSize={defaultLayout[0]}
-          collapsedSize={navCollapsedSize}
-          collapsible={true}
-          minSize={15}
-          maxSize={20}
-          onCollapse={(collapsed) => {
-            setIsCollapsed(collapsed);
-            document.cookie = `react-resizable-panels:collapsed=${JSON.stringify(
-              collapsed
-            )}`;
-          }}
-          className={cn(
-            isCollapsed &&
-              "min-w-[50px] transition-all duration-300 ease-in-out"
-          )}
-        >
-          <Separator />
-          {/* <Nav
-            isCollapsed={isCollapsed}
-            links={[
-              {
-                title: "All Manga",
-                label: "128",
-                icon: BookOpen,
-                variant: "default",
-              },
-              {
-                title: "Bookmarked",
-                label: "9",
-                icon: Bookmark,
-                variant: "ghost",
-              },
-            ]}
-          /> */}
-        </ResizablePanel>
-        <ResizableHandle withHandle />
-        <ResizablePanel defaultSize={defaultLayout[1]} minSize={30}>
-          <Tabs defaultValue="all">
-            <div className="flex items-center px-4 py-2">
-              <h1 className="text-xl font-bold">Manga List</h1>
-              <TabsList className="ml-auto">
-                <TabsTrigger
-                  value="all"
-                  className="text-zinc-600 dark:text-zinc-200"
+    <div className="flex flex-col items-center justify-center min-h-screen bg-zinc-900">
+      <header className="fixed top-0 left-0 right-0 bg-gray-800 p-4 z-50 shadow-md">
+        <div className="container mx-auto flex justify-between items-center">
+          <h1 className="text-4xl font-bold text-white">Leitor de Mangá</h1>
+          <div className="flex items-center gap-4">
+            <Select onValueChange={(value) => setViewMode(value)}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Como deseja assistir?" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem value="list">Lista Única</SelectItem>
+                  <SelectItem value="page">Paginada</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+            {viewMode === "page" && (
+              <div className="flex gap-4">
+                <button
+                  onClick={prevPage}
+                  disabled={currentPage === 0}
+                  className="bg-blue-500 text-white px-4 py-2 rounded disabled:bg-blue-300"
                 >
-                  All Manga
-                </TabsTrigger>
-                <TabsTrigger
-                  value="bookmarked"
-                  className="text-zinc-600 dark:text-zinc-200"
+                  Página Anterior
+                </button>
+                <button
+                  onClick={nextPage}
+                  disabled={
+                    currentPage === (readingData?.images?.length || 0) - 1
+                  }
+                  className="bg-blue-500 text-white px-4 py-2 rounded disabled:bg-blue-300"
                 >
-                  Bookmarked
-                </TabsTrigger>
-              </TabsList>
-            </div>
-            <Separator />
-            <div className="bg-background/95 p-4 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-              <form>
-                <div className="relative">
-                  <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                  <Input placeholder="Search" className="pl-8" />
+                  Próxima Página
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      </header>
+      <main className="flex flex-col items-center justify-center mt-24">
+        {loading ? (
+          <LottieLoad />
+        ) : (
+          <>
+            {readingData?.images && viewMode === "page" && (
+              <div className="w-660 h-1200 mx-auto">
+                <img
+                  src={readingData?.images[currentPage]}
+                  alt={`Manga page ${currentPage + 1}`}
+                  className="object-cover w-full h-full rounded-lg shadow-md"
+                />
+              </div>
+            )}
+            {readingData?.images &&
+              viewMode === "list" &&
+              readingData.images.map((image, index) => (
+                <div key={index} className="w-660 h-1200 mx-auto">
+                  <img
+                    src={image}
+                    alt={`Manga page ${index + 1}`}
+                    className="object-cover w-full h-full rounded-lg shadow-md"
+                  />
                 </div>
-              </form>
-            </div>
-            <TabsContent value="all" className="m-0">
-              {/* <MangaList items={mangas} /> */}
-            </TabsContent>
-            <TabsContent value="bookmarked" className="m-0">
-              {/* <MangaList items={mangas.filter((item) => item.bookmarked)} /> */}
-            </TabsContent>
-          </Tabs>
-        </ResizablePanel>
-        <ResizableHandle withHandle />
-        <ResizablePanel defaultSize={defaultLayout[2]}>
-          {/* <MangaDisplay
-            manga={mangas.find((item) => item.id === manga.selected) || null}
-          /> */}
-        </ResizablePanel>
-      </ResizablePanelGroup>
-    </TooltipProvider>
+              ))}
+          </>
+        )}
+      </main>
+    </div>
   );
-}
+};
+
+export default MangaReader;
