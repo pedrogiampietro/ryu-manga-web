@@ -1,6 +1,5 @@
 import React from "react";
 import { Ratings } from "./custom/starRating";
-import { Separator } from "@/components/ui/separator";
 
 interface MangaDetailsProps {
   title: string;
@@ -70,7 +69,7 @@ const MangaDetails: React.FC<MangaDetailsProps> = ({
         </div>
 
         <div className="flex flex-col">
-          <p className="w-max text-lg text-white dark:text-gray-600">
+          <p className="text-lg text-white dark:text-gray-600 text-wrap">
             <strong className="text-primary">Gêneros:</strong>{" "}
             {genres.join(", ")}
           </p>
@@ -78,7 +77,7 @@ const MangaDetails: React.FC<MangaDetailsProps> = ({
             <strong className="text-primary">Tipo:</strong> {type}
           </p>
 
-          <p className="text-lg text-white dark:text-gray-600">
+          <p className="text-lg text-white dark:text-gray-600 text-wrap">
             <strong className="text-primary">Tags:</strong> {tags.join(", ")}
           </p>
           <p className="text-lg text-white dark:text-gray-600">

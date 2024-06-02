@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import React from "react";
+import { useQuery } from "@tanstack/react-query";
 
 import { Search } from "@/components/search";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -8,69 +9,30 @@ import { UserNav } from "@/components/user-nav";
 import { Layout, LayoutBody, LayoutHeader } from "@/components/custom/layout";
 import { CardManga } from "@/components/manga-card";
 import { apiClient } from "@/services/apiClient";
-import { useToast } from "@/components/ui/use-toast";
+import { LastReadCard } from "@/components/LastReadCard";
+
+const fetchAnimes = async (type: string) => {
+  const { data } = await apiClient().get(`/api/ananquim/${type}`);
+  return data;
+};
+
+const lastRead = JSON.parse(localStorage.getItem("lastRead") as any) || [];
 
 const Dashboard: React.FC = () => {
-  const [loading, setLoading] = useState<boolean>(false);
-  const [geralAnimes, setGeralAnimes] = useState([]);
-  const [latestAnimes, setLatestAnimes] = useState([]);
-  const [trendingAnimes, setTrendingAnimes] = useState([]);
-  const { toast } = useToast();
+  const { data: geralAnimes, isLoading: loadingGeral } = useQuery({
+    queryKey: ["geral"],
+    queryFn: () => fetchAnimes(""),
+  });
+  const { data: latestAnimes, isLoading: loadingLatest } = useQuery({
+    queryKey: ["latest"],
+    queryFn: () => fetchAnimes("latest"),
+  });
+  const { data: trendingAnimes, isLoading: loadingTrending } = useQuery({
+    queryKey: ["trending"],
+    queryFn: () => fetchAnimes("trending"),
+  });
 
-  const getGeralAnimes = async () => {
-    try {
-      const { data } = await apiClient().get("/api/ananquim");
-      setGeralAnimes(data);
-    } catch (error: any) {
-      toast({
-        title: "Oooops!",
-        description: error.message,
-      });
-
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const getLatestAnimes = async () => {
-    try {
-      const { data } = await apiClient().get("/api/ananquim/latest");
-      setLatestAnimes(data);
-    } catch (error: any) {
-      toast({
-        title: "Oooops!",
-        description: error.message,
-      });
-
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const getTrendingAnimes = async () => {
-    try {
-      const { data } = await apiClient().get("/api/ananquim/trending");
-      setTrendingAnimes(data);
-    } catch (error: any) {
-      toast({
-        title: "Oooops!",
-        description: error.message,
-      });
-
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    setLoading(true);
-    getLatestAnimes();
-    getTrendingAnimes();
-    getGeralAnimes();
-  }, []);
+  const isLoading = loadingGeral || loadingLatest || loadingTrending;
 
   return (
     <Layout>
@@ -94,13 +56,13 @@ const Dashboard: React.FC = () => {
           <div className="w-full pb-2">
             <TabsList>
               <TabsTrigger value="home">Geral</TabsTrigger>
-              <TabsTrigger value="latest">Últimos ançamentos</TabsTrigger>
-              <TabsTrigger value="trendings">+ Assistidos</TabsTrigger>
+              <TabsTrigger value="latest">Últimos Lançamentos</TabsTrigger>
+              <TabsTrigger value="trendings">+ Lidos</TabsTrigger>
             </TabsList>
           </div>
 
           <TabsContent value="home" className="space-y-4">
-            {loading ? (
+            {isLoading ? (
               <span>Carregando... </span>
             ) : geralAnimes && geralAnimes.length > 0 ? (
               <CardManga manga={geralAnimes} />
@@ -110,7 +72,7 @@ const Dashboard: React.FC = () => {
           </TabsContent>
 
           <TabsContent value="latest" className="space-y-4">
-            {loading ? (
+            {isLoading ? (
               <span>Carregando... </span>
             ) : latestAnimes && latestAnimes.length > 0 ? (
               <CardManga manga={latestAnimes} />
@@ -120,7 +82,7 @@ const Dashboard: React.FC = () => {
           </TabsContent>
 
           <TabsContent value="trendings" className="space-y-4">
-            {loading ? (
+            {isLoading ? (
               <span>Carregando... </span>
             ) : trendingAnimes && trendingAnimes.length > 0 ? (
               <CardManga manga={trendingAnimes} />
@@ -129,6 +91,13 @@ const Dashboard: React.FC = () => {
             )}
           </TabsContent>
         </Tabs>
+
+        <div className="flex items-center  gap-3 space-y-2">
+          <h1 className="text-2xl font-bold tracking-tight md:text-3xl">
+            Lidos por último
+          </h1>
+        </div>
+        <LastReadCard manga={lastRead} />
       </LayoutBody>
     </Layout>
   );
@@ -137,7 +106,7 @@ const Dashboard: React.FC = () => {
 const topNav = [
   {
     title: "Home",
-    href: "dashboard/home",
+    href: "/",
     isActive: true,
   },
   {

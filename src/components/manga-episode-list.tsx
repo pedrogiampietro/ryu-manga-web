@@ -10,11 +10,40 @@ interface Episode {
 
 interface EpisodesListProps {
   episodes: Episode[];
+  title: string;
+  image: string;
 }
 
-const MangaEpisodesList: React.FC<EpisodesListProps> = ({ episodes }) => {
+const MangaEpisodesList: React.FC<EpisodesListProps> = ({
+  episodes,
+  title,
+  image,
+}) => {
   const { pathname } = useLocation();
   const serealizedNameAnime = pathname.split("/")[2];
+
+  const stateObj = {
+    episodes,
+    title,
+    image,
+  };
+
+  const saveLastRead = (manga: any) => {
+    let lastRead = JSON.parse(localStorage.getItem("lastRead") as any) || [];
+    const index = lastRead.findIndex(
+      (item: any) => item.identifier === manga.identifier
+    );
+
+    if (index !== -1) {
+      // Se o mangá já estiver na lista, atualize o episódio
+      lastRead[index] = manga;
+    } else {
+      // Se o mangá não estiver na lista, adicione-o
+      lastRead.push(manga);
+    }
+
+    localStorage.setItem("lastRead", JSON.stringify(lastRead));
+  };
 
   return (
     <div className="p-4 max-w-3xl mx-auto bg-zinc-900 shadow-md rounded-lg mt-4">
@@ -41,7 +70,16 @@ const MangaEpisodesList: React.FC<EpisodesListProps> = ({ episodes }) => {
                   episode.link.split("/")[episode.link.split("/").length - 2]
                 }`,
               }}
-              state={episodes}
+              state={stateObj}
+              onClick={() =>
+                saveLastRead({
+                  identifier: serealizedNameAnime,
+                  episodio:
+                    episode.link.split("/")[episode.link.split("/").length - 2],
+                  title: title,
+                  image: image,
+                })
+              }
             >
               <h3 className="font-bold">Episódio: {episode.title}</h3>
             </Link>
