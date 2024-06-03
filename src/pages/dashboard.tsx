@@ -9,16 +9,17 @@ import { UserNav } from "@/components/user-nav";
 import { Layout, LayoutBody, LayoutHeader } from "@/components/custom/layout";
 import { CardManga } from "@/components/manga-card";
 import { apiClient } from "@/services/apiClient";
-import { LastReadCard } from "@/components/LastReadCard";
-
-const fetchAnimes = async (type: string) => {
-  const { data } = await apiClient().get(`/api/ananquim/${type}`);
-  return data;
-};
-
-const lastRead = JSON.parse(localStorage.getItem("lastRead") as any) || [];
+import { LastReadCard } from "@/components/last-read-card";
+import axios from "axios";
 
 const Dashboard: React.FC = () => {
+  const lastRead = JSON.parse(localStorage.getItem("lastRead") as any) || [];
+
+  const fetchAnimes = async (type: string) => {
+    const { data } = await apiClient().get(`/api/ananquim/${type}`);
+    return data;
+  };
+
   const { data: geralAnimes, isLoading: loadingGeral } = useQuery({
     queryKey: ["geral"],
     queryFn: () => fetchAnimes(""),

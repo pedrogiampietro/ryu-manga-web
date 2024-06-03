@@ -29,7 +29,7 @@ const MangaReader = () => {
   const [chapter, setChapter] = useState(initialChapter);
   const navigate = useNavigate();
 
-  const fetchMangaDetails = async ({ queryKey }) => {
+  const fetchMangaDetails = async ({ queryKey }: any) => {
     const [_, identifier, episodio] = queryKey;
     const { data } = await apiClient().get(
       `/api/ananquim/manga/${identifier}/${episodio}/read`
@@ -53,10 +53,10 @@ const MangaReader = () => {
     setCurrentPage((prevPage) => prevPage - 1);
   };
 
-  const saveLastRead = (manga) => {
+  const saveLastRead = (manga: any) => {
     let lastRead = JSON.parse(localStorage.getItem("lastRead") as any) || [];
     const index = lastRead.findIndex(
-      (item) => item.identifier === manga.identifier
+      (item: any) => item.identifier === manga.identifier
     );
 
     if (index !== -1) {
@@ -78,7 +78,7 @@ const MangaReader = () => {
         Episódios
       </h2>
       <ul>
-        {state.episodes.map((episode) => {
+        {state.episodes.map((episode: any) => {
           const parts = episode.link.split("/");
           const name = parts[4];
           const episodio = parts[5];
@@ -185,7 +185,7 @@ const MangaReader = () => {
               )}
               {readingData?.images &&
                 viewMode === "list" &&
-                readingData.images.map((image, index) => (
+                readingData.images.map((image: any, index: number) => (
                   <div
                     key={index}
                     className="w-full max-w-md md:w-660 h-auto md:h-1200 mx-auto"
