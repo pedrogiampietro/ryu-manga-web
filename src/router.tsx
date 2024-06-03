@@ -4,6 +4,26 @@ import NotFoundError from "./pages/errors/not-found-error";
 import MaintenanceError from "./pages/errors/maintenance-error";
 
 const router = createBrowserRouter([
+  // Auth routes
+  {
+    path: "/auth/login",
+    lazy: async () => ({
+      Component: (await import("./pages/auth/sign-in")).default,
+    }),
+  },
+  {
+    path: "/auth/register",
+    lazy: async () => ({
+      Component: (await import("./pages/auth/sign-up")).default,
+    }),
+  },
+  {
+    path: "/forgot-password",
+    lazy: async () => ({
+      Component: (await import("./pages/auth/forgot-password")).default,
+    }),
+  },
+
   // Main routes
   {
     path: "/",

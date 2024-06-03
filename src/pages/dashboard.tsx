@@ -10,8 +10,12 @@ import { Layout, LayoutBody, LayoutHeader } from "@/components/custom/layout";
 import { CardManga } from "@/components/manga-card";
 import { apiClient } from "@/services/apiClient";
 import { LastReadCard } from "@/components/last-read-card";
+import { useAuth } from "@/hooks/useAuth";
+import { Button } from "@/components/ui/button";
+import { topNav } from "@/lib/topNav";
 
 const Dashboard: React.FC = () => {
+  const { isAuthenticated } = useAuth();
   const lastRead = JSON.parse(localStorage.getItem("lastRead") as any) || [];
 
   const fetchAnimes = async (type: string) => {
@@ -41,7 +45,7 @@ const Dashboard: React.FC = () => {
         <div className="ml-auto flex items-center space-x-4">
           <Search />
           <ThemeSwitch />
-          <UserNav />
+          {isAuthenticated ? <UserNav /> : <Button>Login</Button>}
         </div>
       </LayoutHeader>
 
@@ -102,18 +106,5 @@ const Dashboard: React.FC = () => {
     </Layout>
   );
 };
-
-const topNav = [
-  {
-    title: "Home",
-    href: "/",
-    isActive: true,
-  },
-  {
-    title: "Register",
-    href: "auth/register",
-    isActive: false,
-  },
-];
 
 export default Dashboard;
