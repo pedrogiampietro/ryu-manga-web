@@ -15,7 +15,7 @@ import { Link } from "react-router-dom";
 
 const baseUrl = "https://api.mangadex.org";
 
-const fetchSearchResults = async (title) => {
+const fetchSearchResults = async (title: string) => {
   const response = await axios.get(`${baseUrl}/manga`, {
     params: { title },
   });
@@ -28,11 +28,7 @@ export function Search() {
   const [isMouseOverList, setIsMouseOverList] = useState(false);
   const debouncedSearchInput = useDebounce(searchInput, 500);
 
-  const {
-    data: searchResults,
-    isLoading: loadingSearchResults,
-    error,
-  } = useQuery({
+  const { data: searchResults } = useQuery({
     queryKey: ["searchResults", debouncedSearchInput],
     queryFn: () => fetchSearchResults(debouncedSearchInput),
     enabled: !!debouncedSearchInput,
@@ -52,7 +48,7 @@ export function Search() {
         <CommandInput
           placeholder="Digite um comando ou pesquise..."
           value={searchInput}
-          onChangeCapture={(e) => setSearchInput(e.target.value)}
+          onChangeCapture={(e: any) => setSearchInput(e.target.value)}
           onFocus={() => setShowCommand(true)}
           onBlur={() => {
             if (!isMouseOverList) {

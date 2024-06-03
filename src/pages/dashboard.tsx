@@ -10,7 +10,6 @@ import { Layout, LayoutBody, LayoutHeader } from "@/components/custom/layout";
 import { CardManga } from "@/components/manga-card";
 import { apiClient } from "@/services/apiClient";
 import { LastReadCard } from "@/components/last-read-card";
-import axios from "axios";
 
 const Dashboard: React.FC = () => {
   const lastRead = JSON.parse(localStorage.getItem("lastRead") as any) || [];

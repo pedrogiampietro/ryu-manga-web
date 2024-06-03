@@ -1,7 +1,7 @@
 import axios from "axios";
 
-let isRefreshing = false;
-let failedRequestQueue = [];
+// let isRefreshing = false;
+// let failedRequestQueue = [];
 
 const limit = 20;
 
