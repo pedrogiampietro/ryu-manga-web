@@ -24,7 +24,7 @@ const formSchema = z.object({
 });
 
 export function ForgotForm({ className, ...props }: ForgotFormProps) {
-  const [isLoading, setIsLoading] = useState(false);
+  const [_, setIsLoading] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
