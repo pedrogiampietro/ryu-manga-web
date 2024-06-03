@@ -60,7 +60,7 @@ export function SignUpForm({ className, ...props }: SignUpFormProps) {
   async function onSubmit(data: z.infer<typeof formSchema>) {
     setIsLoading(true);
     try {
-      const response = await apiClient().post("/api/auth/register", data);
+      await apiClient().post("/api/auth/register", data);
 
       toast({
         title: "Success",
@@ -138,8 +138,9 @@ export function SignUpForm({ className, ...props }: SignUpFormProps) {
                 </FormItem>
               )}
             />
-            <Button className="mt-2" loading={isLoading}>
-              Create Account
+
+            <Button className="mt-2" disabled={isLoading}>
+              {isLoading ? "Carregando..." : "Create Account"}
             </Button>
 
             <div className="relative my-2">
@@ -154,13 +155,7 @@ export function SignUpForm({ className, ...props }: SignUpFormProps) {
             </div>
 
             <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                className="w-full"
-                type="button"
-                loading={isLoading}
-                leftSection={<IconBrandGoogle className="h-4 w-4" />}
-              >
+              <Button variant="outline" className="w-full" type="button">
                 Google
               </Button>
               <Button
@@ -168,8 +163,6 @@ export function SignUpForm({ className, ...props }: SignUpFormProps) {
                 className="w-full"
                 disabled
                 type="button"
-                loading={isLoading}
-                leftSection={<IconBrandFacebook className="h-4 w-4" />}
               >
                 Facebook
               </Button>
