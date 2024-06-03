@@ -11,7 +11,7 @@ export function apiClient() {
   //   const user = JSON.parse(restoreUser);
 
   const api = axios.create({
-    baseURL: "http://192.168.0.68:3333",
+    baseURL: "https://ryu-manga-api.vercel.app",
     headers: {
       //   Authorization: `Bearer ${token}`,
       //   userId: user.userId,
