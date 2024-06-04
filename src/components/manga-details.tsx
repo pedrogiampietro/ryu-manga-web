@@ -54,10 +54,10 @@ const MangaDetails: React.FC<MangaDetailsProps> = ({
         <div className="col-span-1 sm:col-span-2 flex flex-col sm:flex-row sm:justify-between space-y-2 sm:space-y-0 sm:space-x-4">
           <div>
             <p className="text-lg text-white dark:text-gray-600">
-              <strong className="text-primary">Classificação:</strong> {rating}{" "}
-              / 5 out of {reviews}
+              <strong className="text-primary">Classificação:</strong>{" "}
+              {rating > 0 ? rating : 0} / 5 out of {reviews}
             </p>
-            <Ratings rating={rating} />
+            {rating > 0 ? <Ratings rating={rating} /> : null}
           </div>
 
           <p className="text-lg text-white dark:text-gray-600">

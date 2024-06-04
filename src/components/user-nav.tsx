@@ -12,9 +12,15 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/hooks/useAuth";
 import { getInitials } from "@/lib/utils";
+import { useNavigate } from "react-router-dom";
 
 export function UserNav() {
   const { user } = useAuth();
+  const navigate = useNavigate();
+
+  if (!user) {
+    return <Button onClick={() => navigate("/auth/login")}>Login</Button>;
+  }
 
   return (
     <DropdownMenu>

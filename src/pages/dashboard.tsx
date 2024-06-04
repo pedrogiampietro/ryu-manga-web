@@ -13,6 +13,7 @@ import { LastReadCard } from "@/components/last-read-card";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { topNav } from "@/lib/topNav";
+import { LottieLoad } from "@/components/custom/loading";
 
 const Dashboard: React.FC = () => {
   const { isAuthenticated } = useAuth();
@@ -37,6 +38,14 @@ const Dashboard: React.FC = () => {
   });
 
   const isLoading = loadingGeral || loadingLatest || loadingTrending;
+
+  if (isLoading) {
+    return <LottieLoad />;
+  }
+
+  if (!geralAnimes || !latestAnimes || !trendingAnimes) {
+    return <div>Não foi possível carregar os animes.</div>;
+  }
 
   return (
     <Layout>

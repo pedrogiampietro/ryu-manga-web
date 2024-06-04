@@ -20,7 +20,7 @@ export function CardManga({ manga }: any) {
               <CardTitle className="font-bold text-lg">
                 {mangaItem.name}
               </CardTitle>
-              <Ratings rating={mangaItem.rating} />
+              {manga.rating > 0 ? <Ratings rating={mangaItem?.rating} /> : null}
               <div className="flex flex-col space-y-1">
                 <Label htmlFor="name">Último capítulo adicionado</Label>
                 <span className="text-sm text-primary">

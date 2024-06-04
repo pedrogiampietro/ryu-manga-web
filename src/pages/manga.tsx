@@ -27,46 +27,48 @@ const Manga: React.FC = () => {
     queryFn: () => fetchMangaDetails(name),
   });
 
+  if (isLoading) {
+    return <LottieLoad />;
+  }
+
+  if (!mangaDetails) {
+    return <div>Os detalhes do mangá não estão disponíveis no momento.</div>;
+  }
+
   return (
-    <>
-      {isLoading ? (
-        <LottieLoad />
-      ) : (
-        <Layout>
-          <LayoutHeader>
-            <TopNav links={topNav} />
-            <div className="ml-auto flex items-center space-x-4">
-              <Search />
-              <ThemeSwitch />
-              <UserNav />
-            </div>
-          </LayoutHeader>
-          <LayoutBody className="space-y-4">
-            {mangaDetails ? (
-              <MangaDetails {...mangaDetails} />
-            ) : (
-              <div>Não há detalhes do mangá para mostrar.</div>
-            )}
-            {mangaDetails?.summary ? (
-              <MangaSummary summary={mangaDetails.summary} />
-            ) : (
-              <div>Não há resumo para mostrar.</div>
-            )}
-            {mangaDetails?.episodes?.length > 0 ? (
-              <MangaEpisodesList
-                episodes={mangaDetails.episodes}
-                title={mangaDetails.title}
-                image={mangaDetails.image}
-              />
-            ) : (
-              <div className="flex justify-center my-10">
-                Não há episódios para mostrar.
-              </div>
-            )}
-          </LayoutBody>
-        </Layout>
-      )}
-    </>
+    <Layout>
+      <LayoutHeader>
+        <TopNav links={topNav} />
+        <div className="ml-auto flex items-center space-x-4">
+          <Search />
+          <ThemeSwitch />
+          <UserNav />
+        </div>
+      </LayoutHeader>
+      <LayoutBody className="space-y-4">
+        {mangaDetails ? (
+          <MangaDetails {...mangaDetails} />
+        ) : (
+          <div>Não há detalhes do mangá para mostrar.</div>
+        )}
+        {mangaDetails?.summary ? (
+          <MangaSummary summary={mangaDetails.summary} />
+        ) : (
+          <div>Não há resumo para mostrar.</div>
+        )}
+        {mangaDetails?.episodes?.length > 0 ? (
+          <MangaEpisodesList
+            episodes={mangaDetails.episodes}
+            title={mangaDetails.title}
+            image={mangaDetails.image}
+          />
+        ) : (
+          <div className="flex justify-center my-10">
+            Não há episódios para mostrar.
+          </div>
+        )}
+      </LayoutBody>
+    </Layout>
   );
 };
 
