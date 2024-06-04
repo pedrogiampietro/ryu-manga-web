@@ -20,7 +20,7 @@ const MangaEpisodesList: React.FC<EpisodesListProps> = ({
   image,
 }) => {
   const { pathname } = useLocation();
-  const serealizedNameAnime = pathname.split("/")[2];
+  const serealizedNameAnime = pathname?.split("/")[2];
 
   const stateObj = {
     episodes,
@@ -67,7 +67,7 @@ const MangaEpisodesList: React.FC<EpisodesListProps> = ({
             <Link
               to={{
                 pathname: `/ler-manga/${serealizedNameAnime}/${
-                  episode.link.split("/")[episode.link.split("/").length - 2]
+                  episode.link?.split("/")[episode.link?.split("/").length - 2]
                 }`,
               }}
               state={stateObj}
@@ -75,7 +75,9 @@ const MangaEpisodesList: React.FC<EpisodesListProps> = ({
                 saveLastRead({
                   identifier: serealizedNameAnime,
                   episodio:
-                    episode.link.split("/")[episode.link.split("/").length - 2],
+                    episode.link?.split("/")[
+                      episode.link?.split("/").length - 2
+                    ],
                   title: title,
                   image: image,
                 })

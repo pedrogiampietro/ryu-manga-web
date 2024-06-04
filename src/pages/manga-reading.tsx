@@ -19,7 +19,7 @@ const MangaReader = () => {
   const [viewMode, setViewMode] = useState("page");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { pathname, state } = useLocation();
-  const parts = pathname.split("/");
+  const parts = pathname?.split("/");
   const initialChapter = {
     identifier: parts[2],
     episodio: parts[3],
@@ -79,7 +79,7 @@ const MangaReader = () => {
       </h2>
       <ul>
         {state.episodes.map((episode: any) => {
-          const parts = episode.link.split("/");
+          const parts = episode.link?.split("/");
           const name = parts[4];
           const episodio = parts[5];
           const isActive = chapter.episodio === episodio;
