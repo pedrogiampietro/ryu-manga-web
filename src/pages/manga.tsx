@@ -16,7 +16,7 @@ import { TopNav } from "@/components/top-nav";
 import { UserNav } from "@/components/user-nav";
 
 const fetchMangaDetails = async (name: string) => {
-  const { data } = await apiClient().get(`/api/ananquim/manga/${name}`);
+  const { data } = await apiClient().get(`/v1/ananquim/manga/${name}`);
   return data;
 };
 

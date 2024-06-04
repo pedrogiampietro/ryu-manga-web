@@ -32,7 +32,7 @@ const MangaReader = () => {
   const fetchMangaDetails = async ({ queryKey }: any) => {
     const [_, identifier, episodio] = queryKey;
     const { data } = await apiClient().get(
-      `/api/ananquim/manga/${identifier}/${episodio}/read`
+      `/v1/ananquim/manga/${identifier}/${episodio}/read`
     );
 
     setCurrentPage(0);

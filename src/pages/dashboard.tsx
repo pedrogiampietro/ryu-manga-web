@@ -19,7 +19,7 @@ const Dashboard: React.FC = () => {
   const lastRead = JSON.parse(localStorage.getItem("lastRead") as any) || [];
 
   const fetchAnimes = async (type: string) => {
-    const { data } = await apiClient().get(`/api/ananquim/${type}`);
+    const { data } = await apiClient().get(`/v1/ananquim/${type}`);
     return data;
   };
 

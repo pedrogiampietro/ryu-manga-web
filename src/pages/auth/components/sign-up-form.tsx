@@ -59,7 +59,7 @@ export function SignUpForm({ className, ...props }: SignUpFormProps) {
   async function onSubmit(data: z.infer<typeof formSchema>) {
     setIsLoading(true);
     try {
-      await apiClient().post("/api/auth/register", data);
+      await apiClient().post("/v1/auth/register", data);
 
       toast({
         title: "Success",
