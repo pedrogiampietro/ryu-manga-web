@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { apiClient } from "@/services/apiClient";
 import MangaDetails from "@/components/manga-details";
