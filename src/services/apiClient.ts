@@ -5,14 +5,25 @@ import axios from "axios";
 
 const limit = 20;
 
+let baseURL = "";
+
+if (process.env.REACT_APP_API_URL) {
+  if (process.env.REACT_APP_API_URL.startsWith("https")) {
+    baseURL = `${process.env.REACT_APP_API_URL}/api`;
+  } else if (process.env.REACT_APP_API_URL.startsWith("http")) {
+    baseURL = process.env.REACT_APP_API_URL;
+  }
+} else {
+  baseURL = "http://localhost:3333";
+}
+
 export function apiClient() {
   //   const token = getStorageModel(auth.TOKEN);
   //   const restoreUser = getStorageModel(auth.USER);
   //   const user = JSON.parse(restoreUser);
 
   const api = axios.create({
-    baseURL: "http://localhost:3333",
-    // baseURL: "https://imdesk.cloud/api",
+    baseURL,
     headers: {
       //   Authorization: `Bearer ${token}`,
       //   userId: user.userId,
