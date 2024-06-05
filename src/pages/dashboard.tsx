@@ -113,7 +113,8 @@ const Dashboard: React.FC = () => {
         favoritesCallback={fetchFavorites}
       />
 
-      <LayoutBody className="space-y-4 ml-64">
+     
+<LayoutBody className="space-y-4 ml-64 md:ml-0">
         <div className="flex items-center gap-3 space-y-2">
           <h1 className="text-2xl font-bold tracking-tight md:text-3xl">
             Ryu Mangás
