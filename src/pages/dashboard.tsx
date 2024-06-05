@@ -113,14 +113,14 @@ const Dashboard: React.FC = () => {
         favoritesCallback={fetchFavorites}
       />
 
-     
-<LayoutBody className="space-y-4 ml-64 md:ml-0">
+      <LayoutBody className="space-y-4 md:ml-64 sm:ml-0">
         <div className="flex items-center gap-3 space-y-2">
           <h1 className="text-2xl font-bold tracking-tight md:text-3xl">
             Ryu Mangás
           </h1>
           <p>Criado por vocês, para vocês 🔥</p>
         </div>
+
         <Tabs orientation="vertical" defaultValue="home" className="space-y-4">
           <div className="w-full pb-2">
             <TabsList>
