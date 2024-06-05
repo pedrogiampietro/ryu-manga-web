@@ -46,7 +46,7 @@ export function Search() {
     <div className={`relative ${showCommand ? "bg-black bg-opacity-50" : ""}`}>
       <Command className="rounded-lg border shadow-md">
         <CommandInput
-          placeholder="Digite um comando ou pesquise..."
+          placeholder="Pesquise um mangá..."
           value={searchInput}
           onChangeCapture={(e: any) => setSearchInput(e.target.value)}
           onFocus={() => setShowCommand(true)}

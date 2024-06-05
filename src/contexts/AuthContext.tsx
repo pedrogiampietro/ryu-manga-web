@@ -62,6 +62,7 @@ export function AuthContextProvider({ children }: AuthProviderProps) {
       const response = await apiClient().post("/v1/auth/login", login);
 
       const objToStrig = JSON.stringify({
+        userId: response.data.user.userId,
         email: response.data.user.email,
         name: response.data.user.email,
       });

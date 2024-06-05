@@ -1,6 +1,8 @@
 import { Badge } from "@/components/ui/badge";
+import { useAuth } from "@/hooks/useAuth";
+import { apiClient } from "@/services/apiClient";
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 interface Episode {
   title: string;
@@ -20,6 +22,8 @@ const MangaEpisodesList: React.FC<EpisodesListProps> = ({
   image,
 }) => {
   const { pathname } = useLocation();
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const serealizedNameAnime = pathname?.split("/")[2];
 
   const stateObj = {
@@ -28,21 +32,39 @@ const MangaEpisodesList: React.FC<EpisodesListProps> = ({
     image,
   };
 
-  const saveLastRead = (manga: any) => {
-    let lastRead = JSON.parse(localStorage.getItem("lastRead") as any) || [];
-    const index = lastRead.findIndex(
-      (item: any) => item.identifier === manga.identifier
-    );
+  const saveLastRead = async (manga: any) => {
+    if (user) {
+      try {
+        const response = await apiClient().post("/v1/lastWatched", {
+          userId: user?.userId,
+          mangaId: manga.identifier,
+          cover: image,
+          title: title,
+          episodio: manga.episodio,
+        });
 
-    if (index !== -1) {
-      // Se o mangá já estiver na lista, atualize o episódio
-      lastRead[index] = manga;
+        if (response.status === 201) {
+          console.log("Manga adicionado aos últimos lidos com sucesso!");
+        }
+      } catch (error) {
+        console.error("Erro ao adicionar manga aos últimos lidos", error);
+      }
     } else {
-      // Se o mangá não estiver na lista, adicione-o
-      lastRead.push(manga);
-    }
+      let lastRead = JSON.parse(localStorage.getItem("lastRead") as any) || [];
+      const index = lastRead.findIndex(
+        (item: any) => item.identifier === manga.identifier
+      );
 
-    localStorage.setItem("lastRead", JSON.stringify(lastRead));
+      if (index !== -1) {
+        // Se o mangá já estiver na lista, atualize o episódio
+        lastRead[index] = manga;
+      } else {
+        // Se o mangá não estiver na lista, adicione-o
+        lastRead.push(manga);
+      }
+
+      localStorage.setItem("lastRead", JSON.stringify(lastRead));
+    }
   };
 
   return (
@@ -51,10 +73,35 @@ const MangaEpisodesList: React.FC<EpisodesListProps> = ({
         Episódios <Badge>{episodes.length}</Badge>
       </h2>
       <div className="flex items-center justify-center space-x-4 my-6">
-        <button className="bg-primary hover:bg-primary-foreground text-white font-bold py-2 px-4 rounded">
+        <button
+          className="bg-primary hover:bg-primary-foreground text-white font-bold py-2 px-4 rounded"
+          onClick={() => {
+            navigate(
+              `/ler-manga/${serealizedNameAnime}/${
+                episodes[episodes.length - 1].link?.split("/")[
+                  episodes[episodes.length - 1].link?.split("/").length - 2
+                ]
+              }`,
+              { state: stateObj }
+            );
+          }}
+        >
           Assistir primeiro episódio
         </button>
-        <button className="bg-primary hover:bg-primary-foreground text-white font-bold py-2 px-4 rounded">
+        <button
+          className="bg-primary hover:bg-primary-foreground text-white font-bold py-2 px-4 rounded"
+          onClick={() => {
+            navigate(
+              `/ler-manga/${serealizedNameAnime}/${
+                episodes[0].link?.split("/")[
+                  episodes[0].link?.split("/").length - 2
+                ]
+              }`,
+              { state: stateObj }
+            );
+          }}
+        >
+          {" "}
           Assistir último episódio
         </button>
       </div>

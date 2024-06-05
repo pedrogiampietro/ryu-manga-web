@@ -96,7 +96,7 @@ const MangaReader = () => {
                   };
                   setChapter(newChapter);
                   saveLastRead(newChapter);
-                  setIsMenuOpen(false); // Close menu after selecting an episode
+                  setIsMenuOpen(false);
                 }}
                 className={`cursor-pointer ${
                   isActive
@@ -132,7 +132,7 @@ const MangaReader = () => {
               <HomeIcon className="w-5 h-5" />
             </button>
             <h1 className="text-xl md:text-4xl font-bold text-white text-center">
-              Ryu Mangá - Lendo atualmente: {chapter.identifier}
+              Ryu Mangá - Lendo: {chapter.identifier}
             </h1>
             <div className="flex flex-col md:flex-row items-center gap-2 md:gap-4">
               <Select onValueChange={(value) => setViewMode(value)}>
