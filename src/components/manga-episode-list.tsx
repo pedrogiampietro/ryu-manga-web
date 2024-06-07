@@ -3,6 +3,13 @@ import { useAuth } from "@/hooks/useAuth";
 import { apiClient } from "@/services/apiClient";
 import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import { Button } from "./ui/button";
+import { IconEye, IconEyeCancel } from "@tabler/icons-react";
 
 interface Episode {
   title: string;
@@ -21,10 +28,12 @@ const MangaEpisodesList: React.FC<EpisodesListProps> = ({
   title,
   image,
 }) => {
+  const [isOpen, setIsOpen] = React.useState(false);
+
   const { pathname } = useLocation();
   const { user } = useAuth();
   const navigate = useNavigate();
-  const serealizedNameAnime = pathname?.split("/")[2];
+  const serializedNameAnime = pathname?.split("/")[2];
 
   const stateObj = {
     episodes,
@@ -69,15 +78,22 @@ const MangaEpisodesList: React.FC<EpisodesListProps> = ({
 
   return (
     <div className="p-4 max-w-3xl mx-auto bg-zinc-900 shadow-md rounded-lg mt-4">
-      <h2 className="text-2xl font-bold text-white">
-        Episódios <Badge>{episodes.length}</Badge>
-      </h2>
+      <div className="flex items-center space-x-4 mb-4">
+        <img
+          src={image}
+          alt={title}
+          className="w-20 h-20 object-cover rounded-lg"
+        />
+        <h2 className="text-3xl font-bold text-white">
+          {title} <Badge>{episodes.length}</Badge>
+        </h2>
+      </div>
       <div className="flex items-center justify-center space-x-4 my-6">
         <button
           className="bg-primary hover:bg-primary-foreground text-white font-bold py-2 px-4 rounded"
           onClick={() => {
             navigate(
-              `/ler-manga/${serealizedNameAnime}/${
+              `/ler-manga/${serializedNameAnime}/${
                 episodes[episodes.length - 1].link?.split("/")[
                   episodes[episodes.length - 1].link?.split("/").length - 2
                 ]
@@ -92,7 +108,7 @@ const MangaEpisodesList: React.FC<EpisodesListProps> = ({
           className="bg-primary hover:bg-primary-foreground text-white font-bold py-2 px-4 rounded"
           onClick={() => {
             navigate(
-              `/ler-manga/${serealizedNameAnime}/${
+              `/ler-manga/${serializedNameAnime}/${
                 episodes[0].link?.split("/")[
                   episodes[0].link?.split("/").length - 2
                 ]
@@ -101,41 +117,67 @@ const MangaEpisodesList: React.FC<EpisodesListProps> = ({
             );
           }}
         >
-          {" "}
           Assistir último episódio
         </button>
       </div>
-      <ul className="mt-2 space-y-2">
-        {episodes.map((episode) => (
-          <li
-            key={episode.link}
-            className="text-white bg-primary-foreground p-2 rounded"
-          >
-            <Link
-              to={{
-                pathname: `/ler-manga/${serealizedNameAnime}/${
-                  episode.link?.split("/")[episode.link?.split("/").length - 2]
-                }`,
-              }}
-              state={stateObj}
-              onClick={() =>
-                saveLastRead({
-                  identifier: serealizedNameAnime,
-                  episodio:
-                    episode.link?.split("/")[
-                      episode.link?.split("/").length - 2
-                    ],
-                  title: title,
-                  image: image,
-                })
-              }
-            >
-              <h3 className="font-bold">Episódio: {episode.title}</h3>
-            </Link>
-            <p>Data de lançamento: {episode.releaseDate}</p>{" "}
-          </li>
-        ))}
-      </ul>
+
+      <Collapsible open={isOpen} onOpenChange={setIsOpen} className="space-y-2">
+        <div className="flex items-center justify-between space-x-4 px-4">
+          <h4 className="text-sm text-primary font-bold">
+            Expanda aqui para ver todos os episodios
+          </h4>
+          <CollapsibleTrigger asChild>
+            <Button variant="ghost" size="sm">
+              {isOpen ? (
+                <IconEyeCancel className="h-4 w-4" />
+              ) : (
+                <IconEye className="h-4 w-4" />
+              )}
+            </Button>
+          </CollapsibleTrigger>
+        </div>
+
+        <CollapsibleContent className="space-y-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-2">
+            {episodes.map((episode) => (
+              <div
+                key={episode.link}
+                className="text-white bg-primary-foreground p-4 rounded-lg hover:bg-primary transition-colors"
+              >
+                <Link
+                  to={{
+                    pathname: `/ler-manga/${serializedNameAnime}/${
+                      episode.link?.split("/")[
+                        episode.link?.split("/").length - 2
+                      ]
+                    }`,
+                  }}
+                  state={stateObj}
+                  onClick={() =>
+                    saveLastRead({
+                      identifier: serializedNameAnime,
+                      episodio:
+                        episode.link?.split("/")[
+                          episode.link?.split("/").length - 2
+                        ],
+                      title: title,
+                      image: image,
+                    })
+                  }
+                  className="block"
+                >
+                  <h3 className="font-bold text-lg">
+                    Episódio: {episode.title}
+                  </h3>
+                  <p className="text-sm">
+                    Data de lançamento: {episode.releaseDate}
+                  </p>
+                </Link>
+              </div>
+            ))}
+          </div>
+        </CollapsibleContent>
+      </Collapsible>
     </div>
   );
 };

@@ -65,7 +65,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
 
       const timeOutRedirect = setTimeout(() => {
         window.location.href = "/";
-      }, 1);
+      }, 1000);
 
       return () => clearTimeout(timeOutRedirect);
     } else {

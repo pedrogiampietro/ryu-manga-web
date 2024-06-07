@@ -66,7 +66,7 @@ export function Sidebar({
                 isCollapsed ? "invisible w-0" : "visible w-auto"
               }`}
             >
-              <span className="font-medium">Ryu - Meu Painel</span>
+              <span className="font-medium">Ryu Favoritos</span>
               <span className="text-xs">{user?.name}</span>
             </div>
           </div>

@@ -1,11 +1,11 @@
 export const topNav = [
   {
-    title: "Home",
+    title: "Ínicio",
     href: "/",
     isActive: true,
   },
   {
-    title: "Register",
+    title: "Registrar",
     href: "auth/register",
     isActive: false,
   },

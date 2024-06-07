@@ -4,7 +4,6 @@ import { Search } from "@/components/search";
 import { useQuery } from "@tanstack/react-query";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ThemeSwitch from "@/components/theme-switch";
-import { TopNav } from "@/components/top-nav";
 import { UserNav } from "@/components/user-nav";
 import { Layout, LayoutBody, LayoutHeader } from "@/components/custom/layout";
 import { CardManga } from "@/components/manga-card";
@@ -12,6 +11,7 @@ import { apiClient } from "@/services/apiClient";
 import { LastReadCard } from "@/components/last-read-card";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
+import { TopNav } from "@/components/top-nav";
 import { topNav } from "@/lib/topNav";
 import { LottieLoad } from "@/components/custom/loading";
 import { Sidebar } from "@/components/sidebar";
@@ -94,7 +94,7 @@ const Dashboard: React.FC = () => {
     <Layout>
       <LayoutHeader>
         <TopNav links={topNav} />
-        <div className="ml-auto flex items-center space-x-4">
+        <div className="ml-auto hidden md:flex items-center space-x-4">
           <Search />
           <ThemeSwitch />
           {isAuthenticated ? (
@@ -104,6 +104,10 @@ const Dashboard: React.FC = () => {
           )}
         </div>
       </LayoutHeader>
+
+      <div className="md:hidden flex justify-center mt-4 px-4">
+        <Search />
+      </div>
 
       <Sidebar
         isCollapsed={isCollapsed}

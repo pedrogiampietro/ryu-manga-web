@@ -22,6 +22,9 @@ type UserAuth = {
   userId: string;
   name: string;
   email: string;
+  birthDate: any;
+  theme?: any;
+  font?: any;
 };
 
 interface AuthContextData {
@@ -29,7 +32,8 @@ interface AuthContextData {
   isAuthenticated: boolean;
   signIn: any;
   signOut: () => void;
-  user: UserAuth | undefined;
+  user: UserAuth | any;
+  setUser: any;
 }
 
 export const AuthContext = createContext({} as AuthContextData);
@@ -37,7 +41,7 @@ export const AuthContext = createContext({} as AuthContextData);
 export function AuthContextProvider({ children }: AuthProviderProps) {
   const [loading, setLoading] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState<UserAuth>();
+  const [user, setUser] = useState<UserAuth | undefined>(undefined);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -51,8 +55,6 @@ export function AuthContextProvider({ children }: AuthProviderProps) {
       setIsAuthenticated(false);
       setLoading(false);
     }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function signIn(login: User) {
@@ -61,19 +63,26 @@ export function AuthContextProvider({ children }: AuthProviderProps) {
     try {
       const response = await apiClient().post("/v1/auth/login", login);
 
-      const objToStrig = JSON.stringify({
+      const objToString = JSON.stringify({
         userId: response.data.user.userId,
         email: response.data.user.email,
-        name: response.data.user.email,
+        name: response.data.user.name,
+        username: response.data.user.username,
+        birthDate: response.data.user.birthDate,
+        urls: response.data.user.urls,
+        bio: response.data.user.bio,
+        theme: response.data.user.theme,
       });
 
       setStorageModel(auth.TOKEN, response.data.token);
-      setStorageModel(auth.USER, objToStrig);
+      setStorageModel(auth.USER, objToString);
       setIsAuthenticated(true);
 
       apiClient().defaults.headers[
         "Authorization"
       ] = `Bearer ${response.data?.token}`;
+
+      setUser(JSON.parse(objToString));
 
       return response;
     } catch (err: any) {
@@ -94,8 +103,9 @@ export function AuthContextProvider({ children }: AuthProviderProps) {
       title: "Success",
       description: "Ahhh, você já está indo? Isso será um até logo! 😁",
     });
-  }
 
+    window.location.href = "/";
+  }
   return (
     <AuthContext.Provider
       value={{
@@ -104,6 +114,7 @@ export function AuthContextProvider({ children }: AuthProviderProps) {
         signIn,
         signOut,
         user,
+        setUser,
       }}
     >
       {children}

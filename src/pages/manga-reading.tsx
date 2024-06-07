@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { HomeIcon, MenuIcon } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
 const MangaReader = () => {
   const [currentPage, setCurrentPage] = useState(0);
@@ -28,6 +29,7 @@ const MangaReader = () => {
   };
   const [chapter, setChapter] = useState(initialChapter);
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const fetchMangaDetails = async ({ queryKey }: any) => {
     const [_, identifier, episodio] = queryKey;
@@ -53,19 +55,63 @@ const MangaReader = () => {
     setCurrentPage((prevPage) => prevPage - 1);
   };
 
-  const saveLastRead = (manga: any) => {
-    let lastRead = JSON.parse(localStorage.getItem("lastRead") as any) || [];
-    const index = lastRead.findIndex(
-      (item: any) => item.identifier === manga.identifier
+  const saveLastRead = async (manga: any) => {
+    if (user) {
+      try {
+        const response = await apiClient().post("/v1/lastWatched", {
+          userId: user?.userId,
+          mangaId: manga.identifier,
+          cover: manga.image,
+          title: manga.title,
+          episodio: manga.episodio,
+        });
+
+        if (response.status === 201) {
+          console.log("Manga adicionado aos últimos lidos com sucesso!");
+        }
+      } catch (error) {
+        console.error("Erro ao adicionar manga aos últimos lidos", error);
+      }
+    } else {
+      let lastRead = JSON.parse(localStorage.getItem("lastRead") as any) || [];
+
+      const index = lastRead.findIndex(
+        (item: any) => item.identifier === manga.identifier
+      );
+
+      if (index !== -1) {
+        lastRead[index] = manga;
+      } else {
+        lastRead.push(manga);
+      }
+
+      localStorage.setItem("lastRead", JSON.stringify(lastRead));
+    }
+  };
+
+  const nextChapter = () => {
+    const currentEpisodeIndex = state.episodes.findIndex(
+      (episode: any) => episode.link.split("/")[5] === chapter.episodio
     );
 
-    if (index !== -1) {
-      lastRead[index] = manga;
-    } else {
-      lastRead.push(manga);
-    }
+    if (currentEpisodeIndex > 0) {
+      const nextEpisode = state.episodes[currentEpisodeIndex - 1];
 
-    localStorage.setItem("lastRead", JSON.stringify(lastRead));
+      const parts = nextEpisode.link.split("/");
+      const name = parts[4];
+      const episodio = parts[5];
+
+      const newChapter = {
+        identifier: name,
+        episodio: episodio,
+        title: state.title,
+        image: state.image,
+      };
+      setChapter(newChapter);
+      saveLastRead(newChapter);
+    } else {
+      console.log("Você já está no último episódio disponível.");
+    }
   };
 
   const EpisodesPanel = () => (
@@ -78,14 +124,14 @@ const MangaReader = () => {
         Episódios
       </h2>
       <ul>
-        {state.episodes.map((episode: any) => {
+        {state.episodes.map((episode: any, index: number) => {
           const parts = episode.link?.split("/");
           const name = parts[4];
           const episodio = parts[5];
           const isActive = chapter.episodio === episodio;
 
           return (
-            <li key={episode.id} className="p-2">
+            <li key={index} className="p-2">
               <Badge
                 onClick={() => {
                   const newChapter = {
@@ -198,6 +244,14 @@ const MangaReader = () => {
                   </div>
                 ))}
             </>
+          )}
+          {currentPage === readingData?.images.length - 1 && (
+            <button
+              onClick={nextChapter}
+              className="bg-primary hover:bg-primary-foreground text-white px-2 md:px-4 py-2 rounded mt-4"
+            >
+              Próximo Capítulo
+            </button>
           )}
         </main>
       </div>

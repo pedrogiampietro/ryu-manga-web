@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "./ui/button";
 import { IconMenu } from "@tabler/icons-react";
+import { useLocation } from "react-router-dom";
 
 interface TopNavProps extends React.HTMLAttributes<HTMLElement> {
   links: {
@@ -18,6 +19,8 @@ interface TopNavProps extends React.HTMLAttributes<HTMLElement> {
 }
 
 export function TopNav({ className, links, ...props }: TopNavProps) {
+  const { pathname } = useLocation();
+
   return (
     <>
       <div className="md:hidden">
@@ -44,7 +47,9 @@ export function TopNav({ className, links, ...props }: TopNavProps) {
 
       <nav
         className={cn(
-          "hidden items-center space-x-4 md:flex lg:space-x-6 ml-64",
+          `hidden items-center space-x-4 md:flex lg:space-x-6 ${
+            pathname.includes("/settings") ? "ml-0" : "ml-64"
+          } `,
           className
         )}
         {...props}

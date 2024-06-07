@@ -43,8 +43,12 @@ export function Search() {
     }) || [];
 
   return (
-    <div className={`relative ${showCommand ? "bg-black bg-opacity-50" : ""}`}>
-      <Command className="rounded-lg border shadow-md">
+    <div
+      className={`relative w-full md:w-auto ${
+        showCommand ? "bg-black bg-opacity-50" : ""
+      }`}
+    >
+      <Command className="rounded-lg border shadow-md w-full md:w-auto">
         <CommandInput
           placeholder="Pesquise um mangá..."
           value={searchInput}
@@ -59,7 +63,7 @@ export function Search() {
 
         {showCommand && (
           <CommandList
-            className="absolute z-10 max-h-48 w-[207px] overflow-y-auto bg-black rounded-lg border shadow-md"
+            className="absolute z-10 max-h-48 w-full md:w-[207px] overflow-y-auto bg-black rounded-lg border shadow-md"
             style={{ top: "calc(100% + 8px)", left: 0 }}
             onMouseEnter={() => setIsMouseOverList(true)}
             onMouseLeave={() => setIsMouseOverList(false)}

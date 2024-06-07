@@ -17,7 +17,9 @@ import {
 
 import ThemeSwitch from "@/components/theme-switch";
 import { TopNav } from "@/components/top-nav";
+
 import { UserNav } from "@/components/user-nav";
+import { topNav } from "@/lib/topNav";
 
 const Manga: React.FC = () => {
   const { name } = useParams() as any;
@@ -160,18 +162,5 @@ const Manga: React.FC = () => {
     </Layout>
   );
 };
-
-const topNav = [
-  {
-    title: "Home",
-    href: "/",
-    isActive: true,
-  },
-  {
-    title: "Register",
-    href: "auth/register",
-    isActive: false,
-  },
-];
 
 export default Manga;
