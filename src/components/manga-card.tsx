@@ -51,7 +51,7 @@ export function CardManga({ manga, favoritesCallback }: any) {
     <div className="flex overflow-x-scroll space-x-4 p-4">
       {manga.map((mangaItem: any, i: number) => (
         <Link to={`/manga/${encodeURIComponent(mangaItem.identifier)}`} key={i}>
-          <Card className="flex flex-row m-2 shadow-lg w-96 h-50 transform transition duration-500 ease-in-out hover:scale-105 cursor-pointer relative">
+          <Card className="flex flex-ro ww-96 h-50 m-2 shadow-lg transform transition duration-500 ease-in-out hover:scale-105 cursor-pointer relative bg-transparent dark:bg-zinc-900">
             <CardHeader className="w-48 h-full">
               <img
                 src={mangaItem.cover}

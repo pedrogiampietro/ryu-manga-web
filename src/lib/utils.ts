@@ -14,3 +14,10 @@ export function getInitials(name: string) {
   }
   return initials;
 }
+
+export const transformedTitle = (title: string) =>
+  title
+    .replace(/[^a-zA-Z0-9 ]/g, "")
+    .split(" ")
+    .join("-")
+    .toLowerCase();

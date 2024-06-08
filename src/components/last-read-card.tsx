@@ -12,7 +12,7 @@ export function LastReadCard({ manga, isAuthenticated }: any) {
           )}`}
           key={i}
         >
-          <Card className="flex flex-col m-2 shadow-lg w-44 h-60 transform transition duration-500 ease-in-out hover:scale-105 cursor-pointer relative">
+          <Card className="flex flex-col m-2 shadow-lg w-44 h-60 transform transition duration-500 ease-in-out hover:scale-105 cursor-pointer relative bg-transparent dark:bg-zinc-900">
             <CardHeader className="w-full h-32 relative">
               <img
                 src={`${process.env.REACT_APP_API_URL}/${

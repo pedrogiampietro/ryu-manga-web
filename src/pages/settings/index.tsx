@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 import { IconPalette, IconTool, IconUser } from "@tabler/icons-react";
-import { Search } from "@/components/search";
+
 import { Separator } from "@/components/ui/separator";
 import ThemeSwitch from "@/components/theme-switch";
 import { UserNav } from "@/components/user-nav";
@@ -8,13 +8,14 @@ import { Layout, LayoutBody, LayoutHeader } from "@/components/custom/layout";
 import SidebarNav from "./components/sidebar-nav";
 import { TopNav } from "@/components/top-nav";
 import { topNav } from "@/lib/topNav";
+import Combobox from "@/components/ui/combobox";
 
 export default function Settings() {
   return (
     <Layout fadedBelow fixedHeight>
       <LayoutHeader>
         <TopNav links={topNav} />
-        <Search />
+        <Combobox />
         <div className="ml-auto flex items-center space-x-4">
           <ThemeSwitch />
           <UserNav />

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Search } from "@/components/search";
 import { useQuery } from "@tanstack/react-query";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ThemeSwitch from "@/components/theme-switch";
@@ -16,6 +15,7 @@ import { topNav } from "@/lib/topNav";
 import { LottieLoad } from "@/components/custom/loading";
 import { Sidebar } from "@/components/sidebar";
 import useIsCollapsed from "@/hooks/useIsCollapsed";
+import Combobox from "@/components/ui/combobox";
 
 const Dashboard: React.FC = () => {
   const { isAuthenticated, user } = useAuth();
@@ -95,7 +95,7 @@ const Dashboard: React.FC = () => {
       <LayoutHeader>
         <TopNav links={topNav} />
         <div className="ml-auto hidden md:flex items-center space-x-4">
-          <Search />
+          <Combobox />
           <ThemeSwitch />
           {isAuthenticated ? (
             <UserNav />
@@ -105,8 +105,8 @@ const Dashboard: React.FC = () => {
         </div>
       </LayoutHeader>
 
-      <div className="md:hidden flex justify-center mt-4 px-4">
-        <Search />
+      <div className="md:hidden flex mt-6 px-4">
+        <Combobox />
       </div>
 
       <Sidebar
@@ -118,10 +118,13 @@ const Dashboard: React.FC = () => {
       />
 
       <LayoutBody className="space-y-4 md:ml-64 sm:ml-0">
-        <div className="flex items-center gap-3 space-y-2">
+        <div className="flex items-center gap-3 space-y-2 relative mb-4 font-semibold xl:text-lg">
+          <div className="mr-2 h-14 w-1 rounded-md bg-primary md:w-2"></div>
+
           <h1 className="text-2xl font-bold tracking-tight md:text-3xl">
             Ryu Mangás
           </h1>
+
           <p>Criado por vocês, para vocês 🔥</p>
         </div>
 
@@ -174,7 +177,9 @@ const Dashboard: React.FC = () => {
           </TabsContent>
         </Tabs>
 
-        <div className="flex items-center  gap-3 space-y-2">
+        <div className="flex items-center gap-3 space-y-2 relative mb-4 font-semibold xl:text-lg">
+          <div className="mr-2 h-14 w-1 rounded-md bg-primary md:w-2"></div>
+
           <h1 className="text-2xl font-bold tracking-tight md:text-3xl">
             Lidos por último
           </h1>

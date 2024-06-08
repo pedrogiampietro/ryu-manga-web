@@ -100,7 +100,7 @@ export default function Nav({
             favorites?.map((fav: any) => (
               <div
                 key={fav?.manga?.id}
-                className="flex items-center bg-primary-foreground p-2 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 hover:cursor-pointer relative"
+                className="flex items-center bg-transparent dark:bg-zinc-900 p-2 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 hover:cursor-pointer relative"
                 onClick={() => navigate(`/manga/${fav.mangaId}`)}
               >
                 <button

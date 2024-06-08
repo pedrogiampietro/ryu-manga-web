@@ -6,7 +6,7 @@ import MangaSummary from "@/components/manga-summary";
 import MangaEpisodesList from "@/components/manga-episode-list";
 import { LottieLoad } from "@/components/custom/loading";
 import { Layout, LayoutBody, LayoutHeader } from "@/components/custom/layout";
-import { Search } from "@/components/search";
+
 import {
   Dialog,
   DialogContent,
@@ -20,6 +20,7 @@ import { TopNav } from "@/components/top-nav";
 
 import { UserNav } from "@/components/user-nav";
 import { topNav } from "@/lib/topNav";
+import Combobox from "@/components/ui/combobox";
 
 const Manga: React.FC = () => {
   const { name } = useParams() as any;
@@ -109,7 +110,7 @@ const Manga: React.FC = () => {
       <LayoutHeader>
         <TopNav links={topNav} />
         <div className="ml-auto flex items-center space-x-4">
-          <Search />
+          <Combobox />
           <ThemeSwitch />
           <UserNav />
         </div>
