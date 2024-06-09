@@ -51,6 +51,12 @@ const router = createBrowserRouter([
           Component: (await import("./pages/manga-reading")).default,
         }),
       },
+      {
+        path: "highscores",
+        lazy: async () => ({
+          Component: (await import("./pages/highscores")).default,
+        }),
+      },
     ],
   },
   {

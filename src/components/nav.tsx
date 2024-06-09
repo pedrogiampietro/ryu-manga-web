@@ -115,7 +115,7 @@ export default function Nav({
                     setOpen(true);
                   }}
                 >
-                  <X size={14} />
+                  <X size={isCollapsed ? 10 : 14} />
                 </button>
                 {isCollapsed ? (
                   <div className="flex items-center justify-center w-7 h-7 bg-gray-900 rounded-full text-[10px] text-dark font-bold">

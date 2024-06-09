@@ -20,6 +20,7 @@
     "@radix-ui/react-icons": "^1.3.0",
     "@radix-ui/react-label": "^2.0.2",
     "@radix-ui/react-popover": "^1.0.7",
+    "@radix-ui/react-progress": "^1.0.3",
     "@radix-ui/react-radio-group": "^1.1.3",
     "@radix-ui/react-scroll-area": "^1.0.5",
     "@radix-ui/react-select": "^2.0.0",
@@ -39,6 +40,7 @@
     "lottie-react": "^2.4.0",
     "lucide-react": "^0.381.0",
     "react": "^18.2.0",
+    "react-curved-text": "^3.0.1",
     "react-day-picker": "^8.10.1",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.51.5",
@@ -50,6 +52,7 @@
   "devDependencies": {
     "@types/node": "^20.13.0",
     "@types/react": "^18.2.66",
+    "@types/react-curved-text": "^2.0.3",
     "@types/react-dom": "^18.2.22",
     "@typescript-eslint/eslint-plugin": "^7.2.0",
     "@typescript-eslint/parser": "^7.2.0",

@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Link } from "react-router-dom";
+import { Progress } from "@/components/ui/progress";
 
 export function LastReadCard({ manga, isAuthenticated }: any) {
   return (
@@ -31,6 +32,7 @@ export function LastReadCard({ manga, isAuthenticated }: any) {
                   {isAuthenticated ? mangaItem.episode : mangaItem.episodio}
                 </Label>
               </div>
+              <Progress value={mangaItem.progress} />
             </CardContent>
           </Card>
         </Link>

@@ -20,6 +20,7 @@ const MangaReader = () => {
   const [viewMode, setViewMode] = useState("page");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { pathname, state } = useLocation();
+
   const parts = pathname?.split("/");
   const initialChapter = {
     identifier: parts[2],
@@ -64,6 +65,8 @@ const MangaReader = () => {
           cover: manga.image,
           title: manga.title,
           episodio: manga.episodio,
+          currentEpisode: manga.currentEpisode,
+          totalEpisodes: state.episodes.length,
         });
 
         if (response.status === 201) {
@@ -101,9 +104,15 @@ const MangaReader = () => {
       const name = parts[4];
       const episodio = parts[5];
 
+      // TODOO criar função para reaproveitar código
+      // Extrair o número do episodio
+      const match = episodio.match(/(\d+(\.\d+)?)/);
+      const numeroCapitulo = match ? match[1] : "N/A";
+
       const newChapter = {
         identifier: name,
         episodio: episodio,
+        currentEpisode: numeroCapitulo,
         title: state.title,
         image: state.image,
       };
@@ -130,6 +139,11 @@ const MangaReader = () => {
           const episodio = parts[5];
           const isActive = chapter.episodio === episodio;
 
+          // TODOO criar função para reaproveitar código
+          // Extrair o número do capítulo do título
+          const match = episode.title.match(/(\d+(\.\d+)?)/);
+          const numeroCapitulo = match ? match[1] : "N/A";
+
           return (
             <li key={index} className="p-2">
               <Badge
@@ -137,6 +151,7 @@ const MangaReader = () => {
                   const newChapter = {
                     identifier: name,
                     episodio: episodio,
+                    currentEpisode: numeroCapitulo,
                     title: state.title,
                     image: state.image,
                   };

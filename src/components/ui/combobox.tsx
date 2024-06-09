@@ -106,8 +106,6 @@ export default function Combobox() {
           ) : searchResultsData ? (
             <CommandGroup className="z-[99999]">
               {searchResultsData?.map((item: any) => {
-                console.log("item ->", item);
-
                 let fileName = "";
 
                 if (item.relationships) {

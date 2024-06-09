@@ -5,6 +5,11 @@ export const topNav = [
     isActive: true,
   },
   {
+    title: "Ranking",
+    href: "/highscores",
+    isActive: true,
+  },
+  {
     title: "Registrar",
     href: "auth/register",
     isActive: false,

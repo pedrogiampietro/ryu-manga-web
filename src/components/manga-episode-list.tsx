@@ -42,14 +42,19 @@ const MangaEpisodesList: React.FC<EpisodesListProps> = ({
   };
 
   const saveLastRead = async (manga: any) => {
+    const match = manga.episodio.match(/(\d+(\.\d+)?)/);
+    const numeroCapitulo = match ? match[1] : "N/A";
+
     if (user) {
       try {
         const response = await apiClient().post("/v1/lastWatched", {
           userId: user?.userId,
           mangaId: manga.identifier,
-          cover: image,
-          title: title,
+          cover: manga.image,
+          title: manga.title,
           episodio: manga.episodio,
+          currentEpisode: numeroCapitulo,
+          totalEpisodes: episodes.length,
         });
 
         if (response.status === 201) {
@@ -60,15 +65,14 @@ const MangaEpisodesList: React.FC<EpisodesListProps> = ({
       }
     } else {
       let lastRead = JSON.parse(localStorage.getItem("lastRead") as any) || [];
+
       const index = lastRead.findIndex(
         (item: any) => item.identifier === manga.identifier
       );
 
       if (index !== -1) {
-        // Se o mangá já estiver na lista, atualize o episódio
         lastRead[index] = manga;
       } else {
-        // Se o mangá não estiver na lista, adicione-o
         lastRead.push(manga);
       }
 
