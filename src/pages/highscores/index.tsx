@@ -16,6 +16,8 @@ import border1St from "@/assets/border-1st.png";
 import border2St from "@/assets/border-2st.png";
 import border3St from "@/assets/border-3st.png";
 import ReactCurvedText from "react-curved-text";
+import { DataTable } from "./components/data-table";
+import { columns } from "./components/columns";
 
 const mockHighscores = [
   {
@@ -138,20 +140,20 @@ const Highscores: React.FC = () => {
                       backgroundSize: "cover",
                       backgroundPosition: "center",
                       width: "200px",
-                      height: "200px",
+                      height: "250px",
                       display: "flex",
                       flexDirection: "column",
                       alignItems: "center",
                     }}
                   >
-                    <div style={{ position: "relative", top: "40px" }}>
+                    <div style={{ position: "relative", top: "60px" }}>
                       <img
                         src={mockHighscores[1]?.avatar}
                         alt="Avatar"
                         className="w-16 h-16s rounded-full"
                       />
                     </div>
-                    <div style={{ position: "relative", top: "38px" }}>
+                    <div style={{ position: "relative", top: "63px" }}>
                       <h2 id="curvedText" className="text-xl font-bold mt-2">
                         <ReactCurvedText
                           width={370}
@@ -162,7 +164,12 @@ const Highscores: React.FC = () => {
                           ry={98}
                           startOffset={109}
                           reversed={true}
-                          text={mockHighscores[1]?.name || "2nd Place"}
+                          text={
+                            (mockHighscores[1]?.name.length > 8
+                              ? mockHighscores[1]?.name.substring(0, 8) + "..."
+                              : mockHighscores[1]?.name) || "2nd Place"
+                          }
+                          textPathProps={{ fill: "#FFFF" }}
                         />
                       </h2>
                     </div>
@@ -176,20 +183,20 @@ const Highscores: React.FC = () => {
                       backgroundSize: "cover",
                       backgroundPosition: "center",
                       width: "200px",
-                      height: "200px",
+                      height: "250px",
                       display: "flex",
                       flexDirection: "column",
                       alignItems: "center",
                     }}
                   >
-                    <div style={{ position: "relative", top: "40px" }}>
+                    <div style={{ position: "relative", top: "60px" }}>
                       <img
-                        src={mockHighscores[1]?.avatar}
+                        src={mockHighscores[2]?.avatar}
                         alt="Avatar"
-                        className="w-16 h-16s rounded-full"
+                        className="w-16 h-16 rounded-full"
                       />
                     </div>
-                    <div style={{ position: "relative", top: "38px" }}>
+                    <div style={{ position: "relative", top: "64px" }}>
                       <h2 id="curvedText" className="text-xl font-bold mt-2">
                         <ReactCurvedText
                           width={370}
@@ -200,7 +207,12 @@ const Highscores: React.FC = () => {
                           ry={103}
                           startOffset={110}
                           reversed={true}
-                          text={mockHighscores[1]?.name || "2nd Place"}
+                          text={
+                            (mockHighscores[2]?.name.length > 8
+                              ? mockHighscores[2]?.name.substring(0, 8) + "..."
+                              : mockHighscores[2]?.name) || "2nd Place"
+                          }
+                          textPathProps={{ fill: "#FFFF" }}
                         />
                       </h2>
                     </div>
@@ -214,20 +226,20 @@ const Highscores: React.FC = () => {
                       backgroundSize: "cover",
                       backgroundPosition: "center",
                       width: "200px",
-                      height: "200px",
+                      height: "250px",
                       display: "flex",
                       flexDirection: "column",
                       alignItems: "center",
                     }}
                   >
-                    <div style={{ position: "relative", top: "40px" }}>
+                    <div style={{ position: "relative", top: "64px" }}>
                       <img
-                        src={mockHighscores[1]?.avatar}
+                        src={mockHighscores[3]?.avatar}
                         alt="Avatar"
                         className="w-16 h-16s rounded-full"
                       />
                     </div>
-                    <div style={{ position: "relative", top: "38px" }}>
+                    <div style={{ position: "relative", top: "63px" }}>
                       <h2 id="curvedText" className="text-xl font-bold mt-2">
                         <ReactCurvedText
                           width={370}
@@ -238,7 +250,12 @@ const Highscores: React.FC = () => {
                           ry={97}
                           startOffset={110}
                           reversed={true}
-                          text={mockHighscores[1]?.name || "2nd Place"}
+                          text={
+                            (mockHighscores[3]?.name.length > 8
+                              ? mockHighscores[3]?.name.substring(0, 8) + "..."
+                              : mockHighscores[3]?.name) || "2nd Place"
+                          }
+                          textPathProps={{ fill: "#FFFF" }}
                         />
                       </h2>
                     </div>
@@ -251,24 +268,7 @@ const Highscores: React.FC = () => {
 
         <div className="mt-8">
           <h2 className="text-xl font-bold mb-4">Rankings</h2>
-          <table className="w-full border-collapse">
-            <thead>
-              <tr>
-                <th className="border p-2">Position</th>
-                <th className="border p-2">Name</th>
-                <th className="border p-2">Score</th>
-              </tr>
-            </thead>
-            <tbody>
-              {mockHighscores.map((score, index) => (
-                <tr key={score.id}>
-                  <td className="border p-2">{index + 1}</td>
-                  <td className="border p-2">{score.name}</td>
-                  <td className="border p-2">{score.score}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <DataTable data={mockHighscores} columns={columns} />
         </div>
       </LayoutBody>
     </Layout>
