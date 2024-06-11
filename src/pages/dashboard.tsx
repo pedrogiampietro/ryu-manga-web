@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ThemeSwitch from "@/components/theme-switch";
@@ -17,15 +17,23 @@ import { Sidebar } from "@/components/sidebar";
 import useIsCollapsed from "@/hooks/useIsCollapsed";
 import Combobox from "@/components/ui/combobox";
 
+import ReactGA from "react-ga4";
+
 const Dashboard: React.FC = () => {
   const { isAuthenticated, user } = useAuth();
-  const navigate = useNavigate();
-  const lastRead = JSON.parse(localStorage.getItem("lastRead") as any) || [];
   const [isCollapsed, setIsCollapsed] = useIsCollapsed();
   const [favorites, setFavorites] = useState([]);
   const [lastWatched, setLastWatched] = useState([]);
   const [loadingLastWatched, setLoadingLastWatched] = useState(false);
   const [loadingFavorites, setLoadingFavorites] = useState(false);
+
+  const lastRead = JSON.parse(localStorage.getItem("lastRead") as any) || [];
+  let location = useLocation();
+  let navigate = useNavigate();
+
+  useEffect(() => {
+    ReactGA.send({ hitType: "pageview", page: "/" + window.location.pathname });
+  }, [location]);
 
   const fetchFavorites = async () => {
     if (!isAuthenticated) {

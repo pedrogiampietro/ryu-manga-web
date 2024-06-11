@@ -17,6 +17,7 @@ import { cn } from "@/lib/utils";
 import { apiClient } from "@/services/apiClient";
 import { useToast } from "@/components/ui/use-toast";
 import { useNavigate } from "react-router-dom";
+import ReactGA from "react-ga4";
 
 interface SignUpFormProps extends HTMLAttributes<HTMLDivElement> {}
 
@@ -61,6 +62,15 @@ export function SignUpForm({ className, ...props }: SignUpFormProps) {
     setIsLoading(true);
     try {
       await apiClient().post("/v1/auth/register", data);
+
+      ReactGA.event({
+        category: "user_engagement",
+        action: "register",
+        label: "user_register",
+        value: 10,
+        nonInteraction: true,
+        transport: "xhr",
+      });
 
       toast({
         title: "Success",
