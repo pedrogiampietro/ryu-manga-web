@@ -1,10 +1,8 @@
 import { ColumnDef } from "@tanstack/react-table";
 
-import { Badge } from "@/components/ui/badge";
 import { DataTableColumnHeader } from "./data-table-column-header";
 import { DataTableRowActions } from "./data-table-row-actions";
 
-import { labels, priorities, statuses } from "../data/data";
 import { Ranking } from "../data/schema";
 
 export const columns: ColumnDef<Ranking>[] = [

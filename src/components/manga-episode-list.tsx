@@ -28,12 +28,22 @@ const MangaEpisodesList: React.FC<EpisodesListProps> = ({
   title,
   image,
 }) => {
-  const [isOpen, setIsOpen] = React.useState(false);
+  console.log("episodes", episodes);
 
+  const [isOpen, setIsOpen] = React.useState(false);
   const { pathname } = useLocation();
   const { user } = useAuth();
   const navigate = useNavigate();
-  const serializedNameAnime = pathname?.split("/")[2];
+  const serealizedNameAnime = pathname?.split("/")[2];
+  const serealizedFirstEpisode =
+    episodes[episodes.length - 1].link?.split("/")[
+      episodes[episodes.length - 1].link?.split("/").length - 2
+    ];
+
+  const serealizedLastEpisode = episodes[0].link
+    ?.split("/")
+    .filter(Boolean)
+    .pop();
 
   const stateObj = {
     episodes,
@@ -95,14 +105,19 @@ const MangaEpisodesList: React.FC<EpisodesListProps> = ({
       <div className="flex items-center justify-center space-x-4 my-6">
         <button
           className="bg-primary hover:bg-primary-foreground text-white font-bold py-2 px-4 rounded"
-          onClick={() => {
+          onClick={async () => {
+            const manga = {
+              identifier: serealizedNameAnime,
+              image,
+              title,
+              episodio: serealizedFirstEpisode,
+            };
+            await saveLastRead(manga);
             navigate(
-              `/ler-manga/${serializedNameAnime}/${
-                episodes[episodes.length - 1].link?.split("/")[
-                  episodes[episodes.length - 1].link?.split("/").length - 2
-                ]
-              }`,
-              { state: stateObj }
+              `/ler-manga/${serealizedNameAnime}/${serealizedFirstEpisode}`,
+              {
+                state: stateObj,
+              }
             );
           }}
         >
@@ -110,14 +125,19 @@ const MangaEpisodesList: React.FC<EpisodesListProps> = ({
         </button>
         <button
           className="bg-primary hover:bg-primary-foreground text-white font-bold py-2 px-4 rounded"
-          onClick={() => {
+          onClick={async () => {
+            const manga = {
+              identifier: serealizedNameAnime,
+              image,
+              title,
+              episodio: serealizedLastEpisode,
+            };
+            await saveLastRead(manga);
             navigate(
-              `/ler-manga/${serializedNameAnime}/${
-                episodes[0].link?.split("/")[
-                  episodes[0].link?.split("/").length - 2
-                ]
-              }`,
-              { state: stateObj }
+              `/ler-manga/${serealizedNameAnime}/${serealizedLastEpisode}`,
+              {
+                state: stateObj,
+              }
             );
           }}
         >
@@ -150,7 +170,7 @@ const MangaEpisodesList: React.FC<EpisodesListProps> = ({
               >
                 <Link
                   to={{
-                    pathname: `/ler-manga/${serializedNameAnime}/${
+                    pathname: `/ler-manga/${serealizedNameAnime}/${
                       episode.link?.split("/")[
                         episode.link?.split("/").length - 2
                       ]
@@ -159,7 +179,7 @@ const MangaEpisodesList: React.FC<EpisodesListProps> = ({
                   state={stateObj}
                   onClick={() =>
                     saveLastRead({
-                      identifier: serializedNameAnime,
+                      identifier: serealizedNameAnime,
                       episodio:
                         episode.link?.split("/")[
                           episode.link?.split("/").length - 2

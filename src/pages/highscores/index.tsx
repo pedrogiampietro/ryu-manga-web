@@ -18,39 +18,7 @@ import border3St from "@/assets/border-3st.png";
 import ReactCurvedText from "react-curved-text";
 import { DataTable } from "./components/data-table";
 import { columns } from "./components/columns";
-
-const mockHighscores = [
-  {
-    id: 1,
-    name: "John Doe",
-    score: 1500,
-    avatar: "https://github.com/pedrogiampietro.png",
-  },
-  {
-    id: 2,
-    name: "Jane Smith",
-    score: 1400,
-    avatar: "https://github.com/pedrogiampietro.png",
-  },
-  {
-    id: 3,
-    name: "Alice Johnson",
-    score: 1300,
-    avatar: "https://github.com/pedrogiampietro.png",
-  },
-  {
-    id: 4,
-    name: "Bob Brown",
-    score: 1200,
-    avatar: "https://github.com/pedrogiampietro.png",
-  },
-  {
-    id: 5,
-    name: "Charlie Davis",
-    score: 1100,
-    avatar: "https://github.com/pedrogiampietro.png",
-  },
-];
+import { LottieLoad } from "@/components/custom/loading";
 
 const Highscores: React.FC = () => {
   const { isAuthenticated, user } = useAuth();
@@ -58,7 +26,7 @@ const Highscores: React.FC = () => {
   const [isCollapsed, setIsCollapsed] = useIsCollapsed();
   const [favorites, setFavorites] = useState([]);
   const [loadingFavorites, setLoadingFavorites] = useState(false);
-  const [highscores, setHighscores] = useState([]);
+  const [highscores, setHighscores] = useState<any>([]);
   const [loadingHighscores, setLoadingHighscores] = useState(false);
 
   const fetchFavorites = async () => {
@@ -77,8 +45,8 @@ const Highscores: React.FC = () => {
 
   const fetchHighscores = async () => {
     setLoadingHighscores(true);
-    const { data } = await apiClient().get(`/v1/highscores`);
-    setHighscores(data);
+    const { data } = await apiClient().get(`/v1/ranking/highscores-stats`);
+    setHighscores(data.body);
     setLoadingHighscores(false);
   };
 
@@ -86,9 +54,9 @@ const Highscores: React.FC = () => {
     fetchFavorites();
   }, [isAuthenticated, user]);
 
-  // useEffect(() => {
-  //   fetchHighscores();
-  // }, []);
+  useEffect(() => {
+    fetchHighscores();
+  }, []);
 
   return (
     <Layout>
@@ -131,7 +99,7 @@ const Highscores: React.FC = () => {
         <div className="relative flex justify-center mt-8">
           <div className="relative w-full max-w-3xl">
             <img src={podiumImage} alt="Podium" className="w-full" />
-            {mockHighscores.length > 0 && (
+            {highscores.length > 0 && (
               <div className="absolute inset-0 flex justify-center items-end pb-10">
                 <div className="absolute bottom-[10rem] left-1/4 mb-12 w-full text-center flex flex-col items-center">
                   <div
@@ -148,7 +116,7 @@ const Highscores: React.FC = () => {
                   >
                     <div style={{ position: "relative", top: "60px" }}>
                       <img
-                        src={mockHighscores[1]?.avatar}
+                        src={highscores[1]?.avatar}
                         alt="Avatar"
                         className="w-16 h-16s rounded-full"
                       />
@@ -165,9 +133,9 @@ const Highscores: React.FC = () => {
                           startOffset={109}
                           reversed={true}
                           text={
-                            (mockHighscores[1]?.name.length > 8
-                              ? mockHighscores[1]?.name.substring(0, 8) + "..."
-                              : mockHighscores[1]?.name) || "2nd Place"
+                            (highscores[1]?.name.length > 8
+                              ? highscores[1]?.name.substring(0, 8) + "..."
+                              : highscores[1]?.name) || "2nd Place"
                           }
                           textPathProps={{ fill: "#FFFF" }}
                         />
@@ -191,7 +159,7 @@ const Highscores: React.FC = () => {
                   >
                     <div style={{ position: "relative", top: "60px" }}>
                       <img
-                        src={mockHighscores[2]?.avatar}
+                        src={highscores[2]?.avatar}
                         alt="Avatar"
                         className="w-16 h-16 rounded-full"
                       />
@@ -208,9 +176,9 @@ const Highscores: React.FC = () => {
                           startOffset={110}
                           reversed={true}
                           text={
-                            (mockHighscores[2]?.name.length > 8
-                              ? mockHighscores[2]?.name.substring(0, 8) + "..."
-                              : mockHighscores[2]?.name) || "2nd Place"
+                            (highscores[2]?.name.length > 8
+                              ? highscores[2]?.name.substring(0, 8) + "..."
+                              : highscores[2]?.name) || "2nd Place"
                           }
                           textPathProps={{ fill: "#FFFF" }}
                         />
@@ -234,7 +202,7 @@ const Highscores: React.FC = () => {
                   >
                     <div style={{ position: "relative", top: "64px" }}>
                       <img
-                        src={mockHighscores[3]?.avatar}
+                        src={highscores[3]?.avatar}
                         alt="Avatar"
                         className="w-16 h-16s rounded-full"
                       />
@@ -251,9 +219,9 @@ const Highscores: React.FC = () => {
                           startOffset={110}
                           reversed={true}
                           text={
-                            (mockHighscores[3]?.name.length > 8
-                              ? mockHighscores[3]?.name.substring(0, 8) + "..."
-                              : mockHighscores[3]?.name) || "2nd Place"
+                            (highscores[3]?.name.length > 8
+                              ? highscores[3]?.name.substring(0, 8) + "..."
+                              : highscores[3]?.name) || "2nd Place"
                           }
                           textPathProps={{ fill: "#FFFF" }}
                         />
@@ -268,7 +236,11 @@ const Highscores: React.FC = () => {
 
         <div className="mt-8">
           <h2 className="text-xl font-bold mb-4">Rankings</h2>
-          <DataTable data={mockHighscores} columns={columns} />
+          {loadingHighscores ? (
+            <LottieLoad />
+          ) : (
+            <DataTable data={highscores} columns={columns} />
+          )}
         </div>
       </LayoutBody>
     </Layout>

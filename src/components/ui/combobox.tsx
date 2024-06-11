@@ -9,7 +9,7 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { SearchIcon } from "lucide-react";
-import { cn, transformedTitle } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { useDebounce } from "@/hooks/useDebounce";
 import { ArrowUp01, ArrowDown01, LucideHome } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
