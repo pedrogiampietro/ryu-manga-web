@@ -73,6 +73,7 @@ export function AuthContextProvider({ children }: AuthProviderProps) {
         bio: response.data.user.bio,
         theme: response.data.user.theme,
         points: response.data.user.points,
+        avatar: response.data.user.avatar,
       });
 
       setStorageModel(auth.TOKEN, response.data.token);

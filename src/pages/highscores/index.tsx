@@ -11,14 +11,16 @@ import { topNav } from "@/lib/topNav";
 import { Sidebar } from "@/components/sidebar";
 import useIsCollapsed from "@/hooks/useIsCollapsed";
 import Combobox from "@/components/ui/combobox";
-import podiumImage from "@/assets/podium.png";
-import border1St from "@/assets/border-1st.png";
-import border2St from "@/assets/border-2st.png";
-import border3St from "@/assets/border-3st.png";
 import ReactCurvedText from "react-curved-text";
 import { DataTable } from "./components/data-table";
 import { columns } from "./components/columns";
 import { LottieLoad } from "@/components/custom/loading";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
+
+import podiumImage from "@/assets/podium.png";
+import border1St from "@/assets/border-1st.png";
+import border2St from "@/assets/border-2st.png";
+import border3St from "@/assets/border-3st.png";
 
 const Highscores: React.FC = () => {
   const { isAuthenticated, user } = useAuth();
@@ -115,11 +117,9 @@ const Highscores: React.FC = () => {
                     }}
                   >
                     <div style={{ position: "relative", top: "60px" }}>
-                      <img
-                        src={highscores[1]?.avatar}
-                        alt="Avatar"
-                        className="w-16 h-16s rounded-full"
-                      />
+                      <Avatar style={{ width: "4rem", height: "4rem" }}>
+                        <AvatarImage src={highscores[0]?.avatar} />
+                      </Avatar>
                     </div>
                     <div style={{ position: "relative", top: "63px" }}>
                       <h2 id="curvedText" className="text-xl font-bold mt-2">
@@ -133,9 +133,9 @@ const Highscores: React.FC = () => {
                           startOffset={109}
                           reversed={true}
                           text={
-                            (highscores[1]?.name.length > 8
-                              ? highscores[1]?.name.substring(0, 8) + "..."
-                              : highscores[1]?.name) || "2nd Place"
+                            (highscores[0]?.name.length > 8
+                              ? highscores[0]?.name.substring(0, 8) + "..."
+                              : highscores[0]?.name) || "1st Place"
                           }
                           textPathProps={{ fill: "#FFFF" }}
                         />
@@ -158,11 +158,9 @@ const Highscores: React.FC = () => {
                     }}
                   >
                     <div style={{ position: "relative", top: "60px" }}>
-                      <img
-                        src={highscores[2]?.avatar}
-                        alt="Avatar"
-                        className="w-16 h-16 rounded-full"
-                      />
+                      <Avatar style={{ width: "4rem", height: "4rem" }}>
+                        <AvatarImage src={highscores[1]?.avatar} />
+                      </Avatar>
                     </div>
                     <div style={{ position: "relative", top: "64px" }}>
                       <h2 id="curvedText" className="text-xl font-bold mt-2">
@@ -176,9 +174,9 @@ const Highscores: React.FC = () => {
                           startOffset={110}
                           reversed={true}
                           text={
-                            (highscores[2]?.name.length > 8
-                              ? highscores[2]?.name.substring(0, 8) + "..."
-                              : highscores[2]?.name) || "2nd Place"
+                            (highscores[1]?.name.length > 8
+                              ? highscores[1]?.name.substring(0, 8) + "..."
+                              : highscores[1]?.name) || "2nd Place"
                           }
                           textPathProps={{ fill: "#FFFF" }}
                         />
@@ -200,12 +198,10 @@ const Highscores: React.FC = () => {
                       alignItems: "center",
                     }}
                   >
-                    <div style={{ position: "relative", top: "64px" }}>
-                      <img
-                        src={highscores[3]?.avatar}
-                        alt="Avatar"
-                        className="w-16 h-16s rounded-full"
-                      />
+                    <div style={{ position: "relative", top: "60px" }}>
+                      <Avatar style={{ width: "4rem", height: "4rem" }}>
+                        <AvatarImage src={highscores[2]?.avatar} />
+                      </Avatar>
                     </div>
                     <div style={{ position: "relative", top: "63px" }}>
                       <h2 id="curvedText" className="text-xl font-bold mt-2">
@@ -219,9 +215,9 @@ const Highscores: React.FC = () => {
                           startOffset={110}
                           reversed={true}
                           text={
-                            (highscores[3]?.name.length > 8
-                              ? highscores[3]?.name.substring(0, 8) + "..."
-                              : highscores[3]?.name) || "2nd Place"
+                            (highscores[2]?.name.length > 8
+                              ? highscores[2]?.name.substring(0, 8) + "..."
+                              : highscores[2]?.name) || "3nd Place"
                           }
                           textPathProps={{ fill: "#FFFF" }}
                         />
